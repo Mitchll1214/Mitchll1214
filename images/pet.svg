@@ -8,7 +8,7 @@
 <rect x="1" y="1" width="478" height="298" rx="18" fill="rgba(13,17,23,0.96)" stroke="url(#frame)" stroke-width="2"/>
 
   <g opacity="1">
-  <path d="M152 236 C184 252, 220 236, 218 202 C216 176, 190 170, 186 188 C183 202, 202 206, 208 196 Z" fill="rgba(242,166,90,0.35)"/><path d="M170 228 C220 232, 250 206, 244 172 C239 144, 210 138, 204 158 C200 174, 218 180, 226 168 Z" fill="rgba(242,166,90,0.35)"/>
+  
   <path d="M160 232 C206 242, 238 218, 232 184
     C227 154, 198 146, 192 166
     C187 182, 206 188, 214 176 Z"
@@ -40,21 +40,21 @@
       <polygon points="174,42 177,49 184,52 177,55 174,62 171,55 164,52 171,49" fill="#FFD98A"/>
       <polygon points="124,34 126,38 130,40 126,42 124,46 122,42 118,40 122,38" fill="#C8B8F0"/>
     </g>
-  <text x="272" y="46" font-size="18" fill="#E6E1F5" text-anchor="start" font-weight="700" opacity="1" letter-spacing="0">🦊 灵宠 · 小九</text>
-  <g><rect x="272" y="58" width="95" height="22" rx="11" fill="#D96C6C" opacity="0.16" stroke="#D96C6C" stroke-width="1.2"/>
-<text x="319.5" y="73.5" font-size="11" fill="#D96C6C" text-anchor="middle" font-weight="600" letter-spacing="1">成长 · 成狐</text></g>
+  <text x="272" y="46" font-size="18" fill="#E6E1F5" text-anchor="start" font-weight="700" opacity="1" letter-spacing="0">�0�2 ��� �� С��</text>
+  <g><rect x="272" y="58" width="117" height="22" rx="11" fill="#F2A65A" opacity="0.16" stroke="#F2A65A" stroke-width="1.2"/>
+<text x="330.5" y="73.5" font-size="11" fill="#F2A65A" text-anchor="middle" font-weight="600" letter-spacing="1">�ɳ� �� 幼狐</text></g>
   <text x="272" y="112" font-size="13.5" fill="#8E8CD8" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">静坐吐纳 · 今日有灵气入体 ✨</text>
-  <text x="272" y="138" font-size="11.5" fill="#9A93B8" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">灵力 · 近30日</text>
+  <text x="272" y="138" font-size="11.5" fill="#9A93B8" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">���� �� ��30��</text>
   <text x="468" y="138" font-size="11.5" fill="#C8A2F0" text-anchor="end" font-weight="600" opacity="1" letter-spacing="0">100%</text>
   <rect x="272" y="146" width="196" height="9" rx="4" fill="rgba(255,255,255,0.10)"/>
 <rect x="272" y="146" width="196" height="9" rx="4" fill="url(#bar272146)"/>
 <defs><linearGradient id="bar272146" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8E8CD8"/><stop offset="1" stop-color="#C8A2F0"/></linearGradient></defs>
-  <text x="272" y="180" font-size="11.5" fill="#9A93B8" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">亲密度 · 连续5天</text>
-  <text x="468" y="180" font-size="11.5" fill="#FFD98A" text-anchor="end" font-weight="600" opacity="1" letter-spacing="0">50%</text>
+  <text x="272" y="180" font-size="11.5" fill="#9A93B8" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">���ܶ� �� ����4��</text>
+  <text x="468" y="180" font-size="11.5" fill="#FFD98A" text-anchor="end" font-weight="600" opacity="1" letter-spacing="0">40%</text>
   <rect x="272" y="188" width="196" height="9" rx="4" fill="rgba(255,255,255,0.10)"/>
-<rect x="272" y="188" width="98" height="9" rx="4" fill="url(#bar272188)"/>
+<rect x="272" y="188" width="78.4" height="9" rx="4" fill="url(#bar272188)"/>
 <defs><linearGradient id="bar272188" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F0A75B"/><stop offset="1" stop-color="#FFD98A"/></linearGradient></defs>
-  <text x="272" y="238" font-size="11.5" fill="#7A7393" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">今日 1 次提交 · 连续 5 天 · 近一年 263 次</text>
+  <text x="272" y="238" font-size="11.5" fill="#7A7393" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">���� 3 ���ύ �� ���� 4 �� �� ��һ�� 49 ��</text>
   <g opacity="0.5">
     <circle cx="24" cy="278" r="6" fill="none" stroke="#8E8CD8" stroke-width="1.2"/>
     <circle cx="24" cy="278" r="2" fill="#8E8CD8"/>

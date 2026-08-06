@@ -1,4 +1,5 @@
-// /api/realm?user=xxx â€” æŒ‰æ³¨å†Œæ—¶é•¿è‡ªåŠ¨å®šå¢ƒçš„ä¿®ä»™æ¡£æ¡ˆå¡ï¼ˆVercel serverless å…¥å£ï¼‰
+// ĞŞÏÉµµ°¸äÖÈ¾¿â£¨¾³½çÓÉ×¢²áÊ±³¤×Ô¶¯¶¨¾³£©
+// ¹© local/generate.js£¨GitHub Actions£©Óë local/server.js£¨±¾µØÔ¤ÀÀ£©µ÷ÓÃ¡£
 import { getUser, getRepos } from './_lib/github.js';
 import { computeRealm } from './_lib/realm.js';
 import { svgWrap, text, bar, esc } from './_lib/svg.js';
@@ -18,12 +19,14 @@ const lighten = (hex) => {
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 };
 
-export async function renderRealm(username) {
-  const [user, repos] = await Promise.all([
-    getUser(username).catch(() => null),
-    getRepos(username).catch(() => null),
-  ]);
-  if (!user) throw new Error(`æ— æ³•è·å–ç”¨æˆ· ${username} çš„ä¿¡æ¯`);
+export async function renderRealm(username, { data } = {}) {
+  const [user, repos] = data
+    ? [data.user, data.repoStats]
+    : await Promise.all([
+        getUser(username).catch(() => null),
+        getRepos(username).catch(() => null),
+      ]);
+  if (!user) throw new Error(`ÎŞ·¨»ñÈ¡ÓÃ»§ ${username} µÄĞÅÏ¢`);
 
   const created = new Date(user.created_at);
   const realmInfo = computeRealm(created.getTime());
@@ -35,10 +38,10 @@ export async function renderRealm(username) {
 
   const avatar = user.avatar_url || 'https://avatars.githubusercontent.com/Mitchll1214';
   const nextText = realmInfo.next
-    ? `ä¸‹ä¸€å¢ƒï¼š${realmInfo.next.name} Â· è¿˜éœ€çº¦ ${realmInfo.monthsToNext} ä¸ªæœˆ`
-    : 'å·²è‡»é£å‡ Â· è·³å‡ºä¸‰ç•Œå¤–ï¼Œä¸åœ¨äº”è¡Œä¸­';
+    ? `ÏÂÒ»¾³£º${realmInfo.next.name} ¡¤ »¹ĞèÔ¼ ${realmInfo.monthsToNext} ¸öÔÂ`
+    : 'ÒÑÕé·ÉÉı ¡¤ Ìø³öÈı½çÍâ£¬²»ÔÚÎåĞĞÖĞ';
 
-  // çµæ ¹ï¼šè¯­è¨€å°å¾½ç« 
+  // Áé¸ù£ºÓïÑÔĞ¡»ÕÕÂ
   let linggen = '';
   if (repos && repos.topLangs.length) {
     let x = 80;
@@ -53,17 +56,17 @@ export async function renderRealm(username) {
       x += w + 6;
       return chip;
     });
-    linggen = text({ x: 24, y: 118, s: 'çµæ ¹', size: 11.5, fill: '#7A7393' }) + chips.join('');
+    linggen = text({ x: 24, y: 118, s: 'Áé¸ù', size: 11.5, fill: '#7A7393' }) + chips.join('');
   } else {
-    linggen = text({ x: 24, y: 118, s: 'çµæ ¹ Â· æœªæ˜¾ï¼ˆæš‚æ— ä»“åº“è¯­è¨€æ•°æ®ï¼‰', size: 11.5, fill: '#7A7393' });
+    linggen = text({ x: 24, y: 118, s: 'Áé¸ù ¡¤ Î´ÏÔ£¨ÔİÎŞ²Ö¿âÓïÑÔÊı¾İ£©', size: 11.5, fill: '#7A7393' });
   }
 
-  // å±æ€§å››æ ¼
+  // ÊôĞÔËÄ¸ñ
   const cells = [
-    { v: `${realmInfo.days}`, k: 'å¯¿å…ƒï¼ˆå¤©ï¼‰' },
-    { v: `${repos?.repos ?? user.public_repos ?? '-'}`, k: 'æ´åºœï¼ˆä»“åº“ï¼‰' },
-    { v: `${repos?.stars ?? '-'}`, k: 'æ³•å®ï¼ˆStarï¼‰' },
-    { v: `${user.followers ?? 0}`, k: 'é“ä¼—ï¼ˆç²‰ä¸ï¼‰' },
+    { v: `${realmInfo.days}`, k: 'ÊÙÔª£¨Ìì£©' },
+    { v: `${repos?.repos ?? user.public_repos ?? '-'}`, k: '¶´¸®£¨²Ö¿â£©' },
+    { v: `${repos?.stars ?? '-'}`, k: '·¨±¦£¨Star£©' },
+    { v: `${user.followers ?? 0}`, k: 'µÀÖÚ£¨·ÛË¿£©' },
   ];
   const cellW = 105;
   const gap = 4;
@@ -77,13 +80,13 @@ export async function renderRealm(username) {
     .join('');
 
   const body = `
-  ${text({ x: 24, y: 42, s: 'â˜¯ ä¿®ä»™æ¡£æ¡ˆ Â· è‡ªåŠ¨å®šå¢ƒ', size: 15, weight: 700, fill: '#E6E1F5', spacing: 1 })}
-  ${text({ x: 456, y: 42, s: `æ›´æ–°äº ${updated}`, size: 10.5, fill: '#7A7393', anchor: 'end' })}
+  ${text({ x: 24, y: 42, s: '7§1 ĞŞÏÉµµ°¸ ¡¤ ×Ô¶¯¶¨¾³', size: 15, weight: 700, fill: '#E6E1F5', spacing: 1 })}
+  ${text({ x: 456, y: 42, s: `¸üĞÂÓÚ ${updated}`, size: 10.5, fill: '#7A7393', anchor: 'end' })}
   <clipPath id="av"><circle cx="46" cy="82" r="22"/></clipPath>
   <image href="${esc(avatar)}" x="24" y="60" width="44" height="44" clip-path="url(#av)"/>
   <circle cx="46" cy="82" r="22" fill="none" stroke="${color}" stroke-width="2"/>
   ${text({ x: 80, y: 82, s: user.name || username, size: 19, weight: 700 })}
-  ${text({ x: 80, y: 101, s: `@${username} Â· æ³¨å†Œäº ${created.toISOString().slice(0, 10)}`, size: 11, fill: '#7A7393' })}
+  ${text({ x: 80, y: 101, s: `@${esc(username)} ¡¤ ×¢²áÓÚ ${created.toISOString().slice(0, 10)}`, size: 11, fill: '#7A7393' })}
   ${linggen}
   ${text({ x: 24, y: 160, s: realmInfo.fullTitle, size: 44, weight: 800, fill: color })}
   ${text({ x: 24, y: 182, s: nextText, size: 11.5, fill: '#9A93B8' })}
@@ -95,19 +98,4 @@ export async function renderRealm(username) {
   </g>`;
 
   return svgWrap({ width: 480, height: 300, body, border: color });
-}
-
-export default async function handler(req, res) {
-  try {
-    const url = new URL(req.url, 'http://localhost');
-    const user = (url.searchParams.get('user') || 'Mitchll1214').trim();
-    const svg = await renderRealm(user);
-    res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600');
-    res.end(svg);
-  } catch (err) {
-    res.statusCode = 500;
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.end(`realm æ¸²æŸ“å¤±è´¥: ${err.message}`);
-  }
 }
