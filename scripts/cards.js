@@ -224,77 +224,207 @@ export function renderTrophy(data) {
   return svgWrap({ width: 480, height: 50 + 2 * ch + gapY + 14, body, border: '#8E8CD8' });
 }
 
-/** 天道灵脉 · 游龙修炼录（灵脉流光 + 游龙珠 · SMIL 动画，纯装饰卡） */
+/** 天道灵脉 · 游龙录 —— 数据计算（近30日/昨日/连续/上月/品质/进度/状态/涨幅） */
+export function computeSpiritStats(days) {
+  const DAY = 86400e3;
+  const fmt = (d) => d.toISOString().slice(0, 10);
+  const map = new Map((days || []).map((d) => [d.date, d.count]));
+  const today = new Date();
+  const get = (offset) => map.get(fmt(new Date(today.getTime() - offset * DAY))) || 0;
+
+  // 近 30 天逐日提交（索引 0 = 29 天前 … 索引 28 = 昨日，索引 29 = 今日）
+  const daily_commits = [];
+  for (let i = 29; i >= 0; i--) daily_commits.push(get(i));
+  const yesterday_commits = get(1);
+  const total_30_days = daily_commits.reduce((s, n) => s + n, 0);
+
+  // 上个月（前 30 天）总提交，用于涨幅
+  let last_month_total = 0;
+  for (let i = 30; i < 60; i++) last_month_total += get(i);
+
+  // 当前连续提交天数（今日无提交则从昨日起算）
+  let streak_days = 0;
+  for (let off = get(0) > 0 ? 0 : 1; off < 366; off++) {
+    if (get(off) > 0) streak_days++;
+    else break;
+  }
+
+  // 涨幅百分比：正数 +XX% / 负数 -XX%
+  const growth = last_month_total > 0
+    ? ((total_30_days - last_month_total) / last_month_total) * 100
+    : total_30_days > 0 ? 100 : 0;
+  const growthPct = `${growth >= 0 ? '+' : ''}${growth.toFixed(0)}%`;
+
+  // 进度条（基准目标 400 修为）
+  const progress = Math.min(Math.round((total_30_days / 400) * 100), 100);
+
+  // 品质等级（按日均提交）
+  const avg = total_30_days / 30;
+  const quality = avg >= 5 ? '极品' : avg >= 3 ? '上品' : avg >= 1 ? '中品' : '凡品';
+
+  // 状态文案（按进度切换，含高亮关键词）
+  const status =
+    progress >= 90 ? { kw: '圆满', suffix: '，可凝金丹！' }
+    : progress >= 60 ? { kw: '充盈', suffix: '，龙吟隐隐...' }
+    : progress >= 30 ? { kw: '奔涌', suffix: '，汇入丹田...' }
+    : { kw: '初醒', suffix: '，涓涓细流...' };
+
+  return {
+    daily_commits, yesterday_commits, total_30_days, last_month_total,
+    streak_days, growthPct, progress, quality, status, hasYesterday: yesterday_commits > 0,
+  };
+}
+
+/** 天道灵脉 · 游龙录（800×250 数据卡：龙珠昨日修为 + 三十日道行玉简 + 30 日晴雨表） */
 export function renderSnake(days, yearTotal) {
-  // days/yearTotal 参数保留以兼容调用方；本卡为纯动画装饰，不展示数据
+  // yearTotal 参数保留以兼容调用方；本卡数据由 computeSpiritStats(days) 实时计算
+  const s = computeSpiritStats(days);
+  const fillW = Math.round((s.progress / 100) * 470);
+
+  // 主数值区（大数字 + 单位 + 涨幅标签）
+  const numX = 280;
+  const numW = String(s.total_30_days).length * 30;
+  const unitX = numX + numW + 8;
+  const growthColor = s.growthPct.startsWith('-') ? '#f87171' : '#34d399';
+  const growthBg = s.growthPct.startsWith('-') ? 'rgba(239,68,68,0.14)' : 'rgba(16,185,129,0.14)';
+  const growthX = unitX + 60;
+
+  // 30 日晴雨表圆点（索引 28 = 昨日，加白描边并略大）
+  const dotStep = 24;
+  const dotX0 = 40;
+  const dots = s.daily_commits
+    .map((c, i) => {
+      const cx = dotX0 + i * dotStep;
+      return i === 28
+        ? `<circle cx="${cx}" cy="222" r="5.5" fill="${c > 0 ? '#ffd700' : '#2a3650'}" stroke="#ffffff" stroke-width="1.5"/>`
+        : `<circle cx="${cx}" cy="222" r="4" fill="${c > 0 ? '#ffd700' : '#2a3650'}"/>`;
+    })
+    .join('');
+
+  console.log(`✅ 卡片已生成，进度：${s.progress}%，品质：${s.quality}`);
+
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
- width="480"
- height="180"
- viewBox="0 0 480 180"
+ width="800"
+ height="250"
+ viewBox="0 0 800 250"
  role="img"
- font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
+ font-family="system-ui, -apple-system, 'Noto Sans SC', sans-serif">
 
 <defs>
 
-<!-- 外框 -->
-<linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="#D8B478"/>
-<stop offset="0.5" stop-color="#8E8CD8"/>
-<stop offset="1" stop-color="#D96C6C"/>
+<!-- 背景径向渐变 -->
+<radialGradient id="bgGrad" cx="50%" cy="40%" r="80%">
+  <stop offset="0%" stop-color="#0A0E17"/>
+  <stop offset="100%" stop-color="#111827"/>
+</radialGradient>
+
+<!-- 龙珠渐变 -->
+<radialGradient id="ballGrad" cx="40%" cy="35%" r="75%">
+  <stop offset="0%" stop-color="#fff7b0"/>
+  <stop offset="55%" stop-color="#f5b81b"/>
+  <stop offset="100%" stop-color="#b37b0e"/>
+</radialGradient>
+
+<!-- 进度条三色渐变 -->
+<linearGradient id="pbarGrad" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0%" stop-color="#00f0ff"/>
+  <stop offset="55%" stop-color="#3a86ff"/>
+  <stop offset="100%" stop-color="#ffd700"/>
 </linearGradient>
 
-<!-- 灵脉 -->
-<linearGradient id="spirit" x1="0" y1="0" x2="1" y2="0">
-<stop offset="0" stop-color="#D8B478"/>
-<stop offset="0.45" stop-color="#FFF1B8"/>
-<stop offset="1" stop-color="#8E8CD8"/>
+<!-- 流光斜条纹 -->
+<linearGradient id="flowGrad" x1="0" y1="0" x2="0.22" y2="1">
+  <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+  <stop offset="50%" stop-color="#ffffff" stop-opacity="0.5"/>
+  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
 </linearGradient>
 
-<!-- 光晕 -->
-<filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+<!-- 龙珠金黄色外发光 -->
+<filter id="ballGlow" x="-60%" y="-60%" width="220%" height="220%">
+  <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#ffd700" flood-opacity="0.85"/>
+</filter>
 
-<!-- 游龙路径 -->
-<path id="dragon" d="M42 105 C100 105 125 60 200 60 C280 60 310 125 380 125 C415 125 435 105 450 95"/>
+<!-- 流光裁剪（限制在进度条填充范围内） -->
+<clipPath id="barClip"><rect x="280" y="136" width="${fillW}" height="12"/></clipPath>
 
 </defs>
 
 <!-- 背景 -->
-<rect x="1" y="1" width="478" height="178" rx="22" fill="#0D1117" stroke="url(#frame)" stroke-width="2"/>
+<rect x="1" y="1" width="798" height="248" rx="16" fill="url(#bgGrad)" stroke="rgba(255,215,0,0.16)" stroke-width="1.5"/>
 
-<!-- 星尘 -->
-<g fill="#D8B478">
-<circle cx="80" cy="55" r="1.5"><animate attributeName="opacity" values="0.2;1;0.2" dur="3s" repeatCount="indefinite"/></circle>
-<circle cx="260" cy="35" r="1.2"><animate attributeName="opacity" values="1;0.2;1" dur="2.5s" repeatCount="indefinite"/></circle>
-<circle cx="420" cy="55" r="1.5"><animate attributeName="opacity" values="0.2;1;0.2" dur="4s" repeatCount="indefinite"/></circle>
+<!-- 四角古风直角边框（左上 / 右下） -->
+<path d="M 18 46 L 18 18 L 46 18" fill="none" stroke="rgba(255,215,0,0.3)" stroke-width="2"/>
+<path d="M 754 204 L 782 204 L 782 232" fill="none" stroke="rgba(255,215,0,0.3)" stroke-width="2"/>
+
+<!-- ══ 左侧：龙珠 · 昨日修为 ══ -->
+
+<!-- 旋转虚线外圈（正转） -->
+<circle cx="120" cy="115" r="58" fill="none" stroke="rgba(255,215,0,0.28)" stroke-width="1.5" stroke-dasharray="4 9">
+  <animateTransform attributeName="transform" type="rotate" from="0 120 115" to="360 120 115" dur="18s" repeatCount="indefinite"/>
+</circle>
+<!-- 反转虚线外圈 -->
+<circle cx="120" cy="115" r="66" fill="none" stroke="rgba(255,215,0,0.15)" stroke-width="1.2" stroke-dasharray="28 16">
+  <animateTransform attributeName="transform" type="rotate" from="360 120 115" to="0 120 115" dur="26s" repeatCount="indefinite"/>
+</circle>
+
+<!-- 龙珠主体（有提交：金色 + 外发光；无提交：灰白 + 静修） -->
+${s.hasYesterday
+  ? `<circle cx="120" cy="115" r="50" fill="url(#ballGrad)" filter="url(#ballGlow)"/>`
+  : `<circle cx="120" cy="115" r="50" fill="#4a5568"/>`}
+
+<!-- 昨日修为数值 -->
+${s.hasYesterday
+  ? `<text x="120" y="127" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1a1a">${s.yesterday_commits}</text>
+     <text x="120" y="146" text-anchor="middle" font-size="10" fill="#5b4308">昨日修为</text>`
+  : `<text x="120" y="128" text-anchor="middle" font-size="30" font-weight="600" fill="#cbd5e1">静</text>
+     <text x="120" y="146" text-anchor="middle" font-size="10" fill="#94a3b8">静修中</text>`}
+
+<!-- 连续道行徽章（streak_days > 0 才显示） -->
+${s.streak_days > 0
+  ? `<rect x="68" y="186" width="104" height="22" rx="11" fill="rgba(255,215,0,0.12)" stroke="rgba(255,215,0,0.4)" stroke-width="1"/>
+     <text x="120" y="200" text-anchor="middle" font-size="11" fill="#ffd700">✦ 连续道行 ${s.streak_days} 日</text>`
+  : ''}
+
+<!-- ══ 右侧：灵脉玉简 · 三十日修为 ══ -->
+
+<!-- 顶部标题 + 状态标签 -->
+<text x="280" y="48" font-size="16" font-weight="600" fill="#e2e8f0">近三十日道行 · 丙午年 柒月</text>
+<rect x="694" y="32" width="82" height="22" rx="11" fill="rgba(0,240,255,0.12)" stroke="rgba(0,240,255,0.4)" stroke-width="1"/>
+<text x="735" y="47" text-anchor="middle" font-size="11" fill="#67e8f9">⚡ 灵脉活跃</text>
+
+<!-- 主数值 + 单位 + 涨幅标签 -->
+<text x="${numX}" y="112" font-size="48" font-weight="700" fill="#ffffff">${s.total_30_days}</text>
+<text x="${unitX}" y="112" font-size="16" fill="#94a3b8">修为</text>
+<rect x="${growthX}" y="84" width="64" height="26" rx="13" fill="${growthBg}" stroke="${growthColor}" stroke-opacity="0.5" stroke-width="1"/>
+<text x="${growthX + 32}" y="101" text-anchor="middle" font-size="13" font-weight="700" fill="${growthColor}">${s.growthPct}</text>
+
+<!-- 灵脉进度条 -->
+<rect x="280" y="136" width="470" height="12" rx="6" fill="#1f2a3f"/>
+<rect x="280" y="136" width="${fillW}" height="12" rx="6" fill="url(#pbarGrad)"/>
+
+<!-- 动态流光（translateX 驱动，clip 限制在填充条内） -->
+<g clip-path="url(#barClip)">
+  <rect x="280" y="136" width="46" height="12" fill="url(#flowGrad)" opacity="0.6">
+    <animateTransform attributeName="transform" type="translate" from="0" to="${fillW}" dur="3s" repeatCount="indefinite"/>
+  </rect>
 </g>
 
-<!-- 标题 -->
-<text x="24" y="32" font-size="14" font-weight="700" fill="#F4E9D8">☯ 天道灵脉 · 游龙修炼录</text>
-<text x="456" y="32" text-anchor="end" font-size="10" fill="#8E8CD8">GITHUB CULTIVATION</text>
-<line x1="24" y1="45" x2="456" y2="45" stroke="#8E8CD8" stroke-opacity="0.25"/>
+<!-- 终点龙珠（脉动发光） -->
+<circle cx="${280 + fillW}" cy="142" r="15" fill="rgba(255,215,0,0.2)">
+  <animate attributeName="r" values="10;16;10" dur="2.4s" repeatCount="indefinite"/>
+</circle>
+<circle cx="${280 + fillW}" cy="142" r="9" fill="#ffd700">
+  <animate attributeName="opacity" values="1;0.7;1" dur="2.4s" repeatCount="indefinite"/>
+</circle>
 
-<!-- 灵脉外层 -->
-<use href="#dragon" xlink:href="#dragon" stroke="#D8B478" stroke-width="14" opacity="0.2" fill="none" filter="url(#glow)"/>
+<!-- 底部状态栏：状态文案（关键词高亮）+ 品质标签 -->
+<text x="280" y="180" font-size="13" fill="#94a3b8">灵脉<tspan fill="#ffd700" font-weight="700">${s.status.kw}</tspan>${s.status.suffix}</text>
+<rect x="696" y="164" width="82" height="24" rx="12" fill="rgba(255,215,0,0.12)" stroke="rgba(255,215,0,0.4)" stroke-width="1"/>
+<text x="737" y="180" text-anchor="middle" font-size="12" fill="#ffd700">品质 · ${s.quality}</text>
 
-<!-- 灵脉主体 -->
-<use href="#dragon" xlink:href="#dragon" stroke="url(#spirit)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="22 18">
-<animate attributeName="stroke-dashoffset" from="0" to="-200" dur="3s" repeatCount="indefinite"/>
-</use>
-
-<!-- 游动龙珠 -->
-<circle r="6" fill="#FFF1B8"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#dragon" xlink:href="#dragon"/></animateMotion></circle>
-<circle r="18" fill="#D8B478" opacity="0.18" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#dragon" xlink:href="#dragon"/></animateMotion></circle>
-
-<!-- 灵脉节点 -->
-<g fill="#FFE6A7">
-<circle cx="42" cy="105" r="5"><animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite"/></circle>
-<circle cx="200" cy="60" r="5"><animate attributeName="r" values="5;7;5" dur="2.5s" repeatCount="indefinite"/></circle>
-<circle cx="380" cy="125" r="5"><animate attributeName="r" values="5;8;5" dur="3s" repeatCount="indefinite"/></circle>
-</g>
-
-<!-- 修炼等级 -->
-<text x="24" y="155" font-size="11" fill="#9A93B8">提交 = 修炼经验 · Commit = 灵气积累</text>
-<text x="456" y="155" text-anchor="end" font-size="11" fill="#D8B478">✦ 灵脉流转中</text>
+<!-- ══ 底部：30 日晴雨表 ══ -->
+${dots}
+<text x="752" y="226" font-size="10" fill="#94a3b8">昨日</text>
 
 </svg>`;
 }
