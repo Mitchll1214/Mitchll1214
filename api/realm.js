@@ -12,6 +12,24 @@ const LANG_COLORS = {
   Dart: '#00B4AB', PHP: '#4F5D95', Kotlin: '#A97BFF', Swift: '#F05138',
 };
 
+/**
+ * 头像转 data URI 内嵌。
+ * 浏览器以 <img> 图片模式渲染 SVG 时，规范禁止加载一切外部资源（<image href="外部URL"> 不显示），
+ * 仅允许 data: URL —— 所以头像必须拉取后 base64 内嵌。失败返回 null（由调用方降级渲染）。
+ */
+async function toAvatarDataUri(url) {
+  try {
+    const src = `${url}${url.includes('?') ? '&' : '?'}s=96`; // s=96：96px 头像约 3-4KB
+    const res = await fetch(src, { headers: { Accept: 'image/png, image/jpeg' }, signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return null;
+    const buf = Buffer.from(await res.arrayBuffer());
+    const mime = (res.headers.get('content-type') || 'image/png').split(';')[0].trim() || 'image/png';
+    return `data:${mime};base64,${buf.toString('base64')}`;
+  } catch {
+    return null;
+  }
+}
+
 export async function renderRealm(username, { data } = {}) {
   const [user, repos] = data
     ? [data.user, data.repoStats]
@@ -29,6 +47,11 @@ export async function renderRealm(username, { data } = {}) {
   }).replace(/\//g, '-');
 
   const avatar = user.avatar_url || `https://avatars.githubusercontent.com/${username}`;
+  const avatarUri = await toAvatarDataUri(avatar);
+  // 头像：data URI 内嵌（<img> 模式渲染 SVG 禁止外部图片）；失败时降级为首字圆形占位
+  const avatarImg = avatarUri
+    ? `<image href="${avatarUri}" xlink:href="${avatarUri}" x="26" y="62" width="48" height="48" clip-path="url(#avatar)" preserveAspectRatio="xMidYMid slice"/>`
+    : `<circle cx="50" cy="86" r="24" fill="#8E8CD8" opacity="0.35"/><text x="50" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#E8D7B5">${esc((user.name || username).charAt(0))}</text>`;
   const nextText = realmInfo.next
     ? `下一境：${realmInfo.next.name} · 预计 ${realmInfo.monthsToNext} 个月`
     : '已臻飞升 · 跳出三界外，不在五行中';
@@ -164,17 +187,9 @@ export async function renderRealm(username, { data } = {}) {
 
 
 
-<!-- 头像（href + xlink:href 双写，兼容旧渲染器） -->
+<!-- 头像（data URI 内嵌：<img> 模式渲染 SVG 时仅 data: 可用） -->
 
-<image
- href="${esc(avatar)}"
- xlink:href="${esc(avatar)}"
- x="26"
- y="62"
- width="48"
- height="48"
- clip-path="url(#avatar)"
- preserveAspectRatio="xMidYMid slice"/>
+${avatarImg}
 
 
 <circle cx="50"
