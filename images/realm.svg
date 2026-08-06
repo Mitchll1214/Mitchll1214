@@ -1,32 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg"
- width="480" height="300"
- viewBox="0 0 480 300"
- role="img"
- font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
+     width="480"
+     height="300"
+     viewBox="0 0 480 300"
+     role="img"
+     font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
 
 <defs>
 
-  <!-- 外框 -->
-  <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+<!-- 外框渐变 -->
+<linearGradient id="frame"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1">
     <stop offset="0" stop-color="#D8B478"/>
     <stop offset="0.5" stop-color="#8E8CD8"/>
     <stop offset="1" stop-color="#D96C6C"/>
-  </linearGradient>
+</linearGradient>
 
-  <!-- 灵力 -->
-  <linearGradient id="energy" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#E8B86D"/>
-    <stop offset="1" stop-color="#F5DFA8"/>
-  </linearGradient>
 
-  <clipPath id="avatar">
-    <circle cx="50" cy="86" r="24"/>
-  </clipPath>
+<!-- 灵力进度 -->
+<linearGradient id="energy"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0">
+    <stop offset="0"
+          stop-color="#D8B478"/>
+    <stop offset="1"
+          stop-color="#FFE6A7"/>
+</linearGradient>
+
+
+<!-- 头像裁剪 -->
+<clipPath id="avatar"
+          clipPathUnits="userSpaceOnUse">
+    <circle cx="50"
+            cy="86"
+            r="24"/>
+</clipPath>
+
 
 </defs>
 
 
-<!-- 背景 -->
+<!-- 主卡片 -->
+
 <rect x="1"
       y="1"
       width="478"
@@ -38,7 +57,9 @@
       stroke-width="2"/>
 
 
-<!-- 顶部标题 -->
+
+<!-- 标题 -->
+
 <text x="24"
       y="34"
       font-size="14"
@@ -54,12 +75,13 @@
       text-anchor="end"
       font-size="10"
       fill="#8E8CD8">
-更新 08-06 10:58
+更新于 08-06 10:58
 </text>
 
 
 
 <!-- 分割线 -->
+
 <line x1="24"
       y1="48"
       x2="456"
@@ -69,14 +91,17 @@
 
 
 
+
 <!-- 头像 -->
+
 <image
- href="https://avatars.githubusercontent.com/u/61879892?u=75b008c7e973c420353e80a7e0f2bdfb8b84ae9a&amp;v=4"
+ href="https://avatars.githubusercontent.com/Mitchll1214?v=4"
  x="26"
  y="62"
  width="48"
  height="48"
- clip-path="url(#avatar)"/>
+ clip-path="url(#avatar)"
+ preserveAspectRatio="xMidYMid slice"/>
 
 
 <circle cx="50"
@@ -88,7 +113,8 @@
 
 
 
-<!-- 用户 -->
+<!-- 用户信息 -->
+
 <text x="86"
       y="82"
       font-size="20"
@@ -107,7 +133,9 @@ Mitchll
 
 
 
+
 <!-- 灵根 -->
+
 <text x="24"
       y="132"
       font-size="11"
@@ -116,9 +144,10 @@ Mitchll
 </text>
 
 
-<!-- 标签 -->
+<!-- JS -->
 
 <g>
+
 <rect x="72"
       y="116"
       width="120"
@@ -140,10 +169,15 @@ Mitchll
       fill="#E8D7B5">
 JavaScript
 </text>
+
 </g>
 
 
+
+<!-- Python -->
+
 <g>
+
 <rect x="200"
       y="116"
       width="92"
@@ -165,10 +199,15 @@ JavaScript
       fill="#E8D7B5">
 Python
 </text>
+
 </g>
 
 
+
+<!-- TS -->
+
 <g>
+
 <rect x="300"
       y="116"
       width="125"
@@ -190,7 +229,10 @@ Python
       fill="#E8D7B5">
 TypeScript
 </text>
+
 </g>
+
+
 
 
 
@@ -205,16 +247,18 @@ TypeScript
 </text>
 
 
+
 <text x="26"
       y="198"
       font-size="11"
       fill="#9A93B8">
-距离炼虚 · 约 68 个月
+下一境：炼虚 · 预计 68 个月
 </text>
 
 
 
-<!-- 灵力槽 -->
+
+<!-- 灵力条 -->
 
 <rect x="24"
       y="212"
@@ -243,7 +287,7 @@ TypeScript
 
 
 
-<!-- 属性 -->
+<!-- 属性卡 -->
 
 <g>
 
@@ -257,6 +301,7 @@ TypeScript
       stroke="#8E8CD8"
       stroke-opacity="0.3"/>
 
+
 <text x="75"
       y="257"
       text-anchor="middle"
@@ -265,6 +310,7 @@ TypeScript
       font-weight="700">
 2343
 </text>
+
 
 <text x="75"
       y="272"
@@ -290,6 +336,7 @@ TypeScript
       stroke="#8E8CD8"
       stroke-opacity="0.3"/>
 
+
 <text x="185"
       y="257"
       text-anchor="middle"
@@ -298,6 +345,7 @@ TypeScript
       font-weight="700">
 70
 </text>
+
 
 <text x="185"
       y="272"
@@ -308,7 +356,6 @@ TypeScript
 </text>
 
 </g>
-
 
 
 
@@ -324,6 +371,7 @@ TypeScript
       stroke="#8E8CD8"
       stroke-opacity="0.3"/>
 
+
 <text x="295"
       y="257"
       text-anchor="middle"
@@ -332,6 +380,7 @@ TypeScript
       font-weight="700">
 11
 </text>
+
 
 <text x="295"
       y="272"
@@ -358,6 +407,7 @@ TypeScript
       stroke="#8E8CD8"
       stroke-opacity="0.3"/>
 
+
 <text x="405"
       y="257"
       text-anchor="middle"
@@ -366,6 +416,7 @@ TypeScript
       font-weight="700">
 0
 </text>
+
 
 <text x="405"
       y="272"
@@ -379,14 +430,15 @@ TypeScript
 
 
 
-<!-- 底部印记 -->
+
+<!-- 底部铭文 -->
 
 <text x="456"
       y="294"
       text-anchor="end"
       font-size="9"
       fill="#8E8CD8"
-      opacity="0.35">
+      fill-opacity="0.35">
 大道五十 · 天衍四九
 </text>
 
