@@ -6,8 +6,8 @@
 <!-- 2. 洞府主人 -->
 <div align="center">
   <img src="https://avatars.githubusercontent.com/Mitchll1214" width="120" style="border-radius:50%; border: 2px solid #8E8CD8;" alt="avatar" />
-  <h3>👋 你好，我是 Mitch</h3>
-  <p><sub>本洞府一切数据由 <b>GitHub Actions</b> 每日自动采集 · 零第三方服务</sub></p>
+  <h3>👋 你好，我是 Mitchll</h3>
+  <p><sub>本洞府一切数据皆由天道 <b>（GitHub Actions）</b> 每日自行采撷推演，不假外物，无染旁门。</sub></p>
 </div>
 
 ---
