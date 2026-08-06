@@ -1,0 +1,5 @@
+# Reasonix 工具目录
+.reasonix/
+
+# Node
+node_modules/

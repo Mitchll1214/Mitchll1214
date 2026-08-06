@@ -1,0 +1,14 @@
+{
+  "name": "xianxia-profile",
+  "version": "1.0.0",
+  "description": "Mitchll1214 的 GitHub 主页修仙系统：虚拟灵宠 + 修仙境界动态 SVG",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node local/server.js",
+    "test": "node local/test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
