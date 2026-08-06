@@ -24,30 +24,24 @@ export function levelOf(count, max) {
 }
 const HEAT = ['rgba(142,140,216,0.10)', 'rgba(142,140,216,0.32)', 'rgba(142,140,216,0.55)', 'rgba(142,140,216,0.80)', '#C8A2F0'];
 
-/** 道号横幅（静态排版 + 星光微动画，兼容性最稳） */
-export function renderBanner(lines, { width = 480, height = 64 } = {}) {
-  const main = lines[0] || '因果不虚 · 静观其变';
-  const sub = lines.slice(1).join(' · ') || '看破红尘善与恶 · 只观因果静思安';
-  const twinkle = (x, y, r, delay) => `<polygon points="${starPts(x, y, r)}" fill="#C8A2F0"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="${delay}s" repeatCount="indefinite"/></polygon>`;
-  const body = `
-  <line x1="30" y1="32" x2="66" y2="32" stroke="#8E8CD8" stroke-opacity="0.35" stroke-width="1.5"/>
-  <line x1="414" y1="32" x2="450" y2="32" stroke="#8E8CD8" stroke-opacity="0.35" stroke-width="1.5"/>
-  ${text({ x: 240, y: 36, s: main, size: 21, weight: 700, fill: '#8E8CD8', anchor: 'middle', spacing: 2 })}
-  ${text({ x: 240, y: 56, s: sub, size: 12, fill: '#9A93B8', anchor: 'middle' })}
-  ${twinkle(20, 22, 5, 0)}${twinkle(460, 22, 5, 1.5)}${twinkle(24, 48, 3.5, 0.8)}${twinkle(456, 48, 3.5, 2.2)}
-  `;
-  return svgWrap({ width, height, body, border: '#8E8CD8' });
-}
-
-/** 四角星顶点串（供内联使用） */
-function starPts(cx, cy, r) {
-  const pts = [];
-  for (let k = 0; k < 8; k++) {
-    const a = (k * Math.PI) / 4 - Math.PI / 2;
-    const rad = k % 2 === 0 ? r : r * 0.38;
-    pts.push(`${(cx + rad * Math.cos(a)).toFixed(1)},${(cy + rad * Math.sin(a)).toFixed(1)}`);
-  }
-  return pts.join(' ');
+/** 打字横幅（SMIL 轮播） */
+export function renderBanner(lines, { width = 480, height = 56 } = {}) {
+  const n = lines.length;
+  const per = 6; // 每句展示秒数
+  const total = per * n;
+  const t = lines
+    .map(
+      (line, i) => `<text x="50%" y="50%" font-size="20" font-weight="600" fill="#8E8CD8" text-anchor="middle" dominant-baseline="central" letter-spacing="2">
+    ${esc(line)}
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="${total}s" begin="${i * per}s" repeatCount="indefinite"/>
+  </text>`,
+    )
+    .join('');
+  const deco = `<g opacity="0.6">
+    <circle cx="24" cy="28" r="2.5" fill="#8E8CD8"/>
+    <circle cx="456" cy="28" r="2.5" fill="#8E8CD8"/>
+  </g>`;
+  return svgWrap({ width, height, body: t + deco, border: '#8E8CD8' });
 }
 
 /** 修行记录统计卡：6 项指标 2 行 */
@@ -191,11 +185,11 @@ export function renderTrophy(data) {
 
 /** 贪吃蛇（SMIL：蛇身 stroke-dashoffset 蠕动 + 蛇头 animateMotion 跟随） */
 export function renderSnake(days, yearTotal) {
-  const cell = 4;
+  const cell = 5;
   const gap = 2;
   const step = cell + gap;
   const X0 = 40;
-  const Y0 = 44;
+  const Y0 = 40;
   const maxCount = Math.max(1, ...days.map((d) => d.count));
   const map = new Map(days.map((d) => [d.date, d.count]));
   const today = new Date();
@@ -219,20 +213,21 @@ export function renderSnake(days, yearTotal) {
         .join(''),
     )
     .join('');
-  // 环形巡山跑道（闭环路径，蛇循环巡游不跳变）。上弧 + 下弧组成跑道。
-  const snakePath = 'M60 112 A 195 24 0 0 1 450 112 A 195 24 0 0 1 60 112 Z';
-  // 淡色轨迹线，暗示跑道
-  const track = `<path d="${snakePath}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="2" stroke-dasharray="3 7"/>`;
-  // 整条蛇（头+身+尾一体）沿跑道巡游，rotate=auto 自动转向，头部始终朝行进方向
-  const snakeGroup = `<g>
-    <animateMotion dur="9s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
-    <circle cx="0" cy="0" r="8.5" fill="#34D399" stroke="#0D1117" stroke-width="1.5"/>
-    <circle cx="-15" cy="0" r="7.5" fill="#4ade80"/>
-    <circle cx="-28" cy="0" r="6" fill="#6ee7b7"/>
-    <circle cx="-39" cy="0" r="4" fill="#a7f3d0"/>
-    <circle cx="4" cy="-4" r="2" fill="#0D1117"/>
+  // 蛇的游动路径（S 形横穿）。pathLength=100 归一化：蛇身 dash 与蛇头 motion 用同一长度基准，严格同步。
+  const snakePath = 'M40 84 C 110 84, 130 48, 200 48 C 270 48, 290 116, 360 116 C 400 116, 420 84, 452 84';
+  // dash 图案：实 20 + 空 80（周期 100）。offset 0→-100 时实段起点沿路径 0%→100% 匀速爬行
+  const snakeBody = `<path d="${snakePath}" pathLength="100" fill="none" stroke="url(#snakeGrad)" stroke-width="11" stroke-linecap="round" stroke-dasharray="20 80">
+    <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="8s" repeatCount="indefinite"/>
+  </path>`;
+  const snakeHead = `<g>
+    <circle r="8" fill="#34D399" stroke="#0D1117" stroke-width="1.5">
+      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
+    </circle>
+    <circle cx="3.5" cy="-1.5" r="1.6" fill="#0D1117">
+      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
+    </circle>
   </g>`;
-  const foods = ['80,66', '300,30', '430,96', '170,140']
+  const foods = ['48,26', '240,120', '420,44', '330,24']
     .map((p, i) => {
       const [fx, fy] = p.split(',').map(Number);
       const pts = [];
@@ -241,19 +236,22 @@ export function renderSnake(days, yearTotal) {
         const rad = k % 2 === 0 ? 5 : 1.9;
         pts.push(`${(fx + rad * Math.cos(a)).toFixed(1)},${(fy + rad * Math.sin(a)).toFixed(1)}`);
       }
-      return `<polygon points="${pts.join(' ')}" fill="#FFD98A"><animate attributeName="opacity" values="1;0.3;1" dur="${2 + i}s" begin="${i * 0.7}s" repeatCount="indefinite"/></polygon>`;
+      return `<polygon points="${pts.join(' ')}" fill="#FFD98A"><animate attributeName="opacity" values="1;0.3;1" dur="${2 + i}s" repeatCount="indefinite"/></polygon>`;
     })
     .join('');
   const body = `
     <defs>
+      <linearGradient id="snakeGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="#8E8CD8"/>
+      </linearGradient>
       <path id="snakeRoute" d="${snakePath}"/>
     </defs>
     ${text({ x: 24, y: 30, s: '🐍 灵蛇巡山 · 吃掉你的提交', size: 14, weight: 700, spacing: 1 })}
     ${text({ x: 456, y: 30, s: `${yearTotal} 颗灵气`, size: 11, fill: '#7A7393', anchor: 'end' })}
     ${cellsSvg}
-    ${track}
-    ${snakeGroup}
+    ${snakeBody}
+    ${snakeHead}
     ${foods}
   `;
-  return svgWrap({ width: 480, height: 160, body, border: '#34D399' });
+  return svgWrap({ width: 480, height: 140, body, border: '#34D399' });
 }
