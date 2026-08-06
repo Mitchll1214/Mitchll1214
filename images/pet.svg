@@ -54,7 +54,7 @@
   <rect x="272" y="188" width="196" height="9" rx="4" fill="rgba(255,255,255,0.10)"/>
 <rect x="272" y="188" width="78.4" height="9" rx="4" fill="url(#bar272188)"/>
 <defs><linearGradient id="bar272188" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F0A75B"/><stop offset="1" stop-color="#FFD98A"/></linearGradient></defs>
-  <text x="272" y="238" font-size="11.5" fill="#7A7393" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">今日 4 次提交 · 连续 4 天 · 近一年 50 次</text>
+  <text x="272" y="238" font-size="11.5" fill="#7A7393" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">今日 5 次提交 · 连续 4 天 · 近一年 51 次</text>
   <g opacity="0.5">
     <circle cx="24" cy="278" r="6" fill="none" stroke="#8E8CD8" stroke-width="1.2"/>
     <circle cx="24" cy="278" r="2" fill="#8E8CD8"/>
