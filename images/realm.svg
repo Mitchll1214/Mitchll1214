@@ -1,448 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     width="480"
-     height="300"
-     viewBox="0 0 480 300"
-     role="img"
-     font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
-
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="480" height="300" viewBox="0 0 480 300" role="img" font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
 <defs>
-
-<!-- 外框渐变 -->
-<linearGradient id="frame"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="1">
-    <stop offset="0" stop-color="#D8B478"/>
-    <stop offset="0.5" stop-color="#8E8CD8"/>
-    <stop offset="1" stop-color="#D96C6C"/>
-</linearGradient>
-
-
-<!-- 灵力进度 -->
-<linearGradient id="energy"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0">
-    <stop offset="0"
-          stop-color="#D8B478"/>
-    <stop offset="1"
-          stop-color="#FFE6A7"/>
-</linearGradient>
-
-
-<!-- 头像裁剪 -->
-<clipPath id="avatar"
-          clipPathUnits="userSpaceOnUse">
-    <circle cx="50"
-            cy="86"
-            r="24"/>
-</clipPath>
-
-
+  <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#D96C6C" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#3A3560" stop-opacity="0.9"/>
+  </linearGradient>
 </defs>
-
-
-<!-- 主卡片 -->
-
-<rect x="1"
-      y="1"
-      width="478"
-      height="298"
-      rx="20"
-      fill="#0D1117"
-      fill-opacity="0.97"
-      stroke="url(#frame)"
-      stroke-width="2"/>
-
-
-
-<!-- 标题 -->
-
-<text x="24"
-      y="34"
-      font-size="14"
-      fill="#F4E9D8"
-      font-weight="700"
-      letter-spacing="1">
-☯ 修仙档案 · 天道记录
-</text>
-
-
-<text x="456"
-      y="34"
-      text-anchor="end"
-      font-size="10"
-      fill="#8E8CD8">
-更新于 08-06 10:58
-</text>
-
-
-
-<!-- 分割线 -->
-
-<line x1="24"
-      y1="48"
-      x2="456"
-      y2="48"
-      stroke="#8E8CD8"
-      stroke-opacity="0.25"/>
-
-
-
-
-<!-- 头像 -->
-
-<image
- href="https://avatars.githubusercontent.com/Mitchll1214?v=4"
- xlink:href="https://avatars.githubusercontent.com/Mitchll1214?v=4"
- x="26"
- y="62"
- width="48"
- height="48"
- clip-path="url(#avatar)"
- preserveAspectRatio="xMidYMid slice"/>
-
-
-<circle cx="50"
-        cy="86"
-        r="25"
-        fill="none"
-        stroke="#D8B478"
-        stroke-width="2"/>
-
-
-
-<!-- 用户信息 -->
-
-<text x="86"
-      y="82"
-      font-size="20"
-      fill="#F4E9D8"
-      font-weight="700">
-Mitchll
-</text>
-
-
-<text x="86"
-      y="101"
-      font-size="11"
-      fill="#8E8CD8">
-@Mitchll1214 · 入道 2020-03-06
-</text>
-
-
-
-
-<!-- 灵根 -->
-
-<text x="24"
-      y="132"
-      font-size="11"
-      fill="#8E8CD8">
-灵根
-</text>
-
-
-<!-- JS -->
-
-<g>
-
-<rect x="72"
-      y="116"
-      width="120"
-      height="22"
-      rx="11"
-      fill="#D8B478"
-      fill-opacity="0.12"
-      stroke="#D8B478"
-      stroke-opacity="0.5"/>
-
-<circle cx="84"
-        cy="127"
-        r="3"
-        fill="#D8B478"/>
-
-<text x="94"
-      y="131"
-      font-size="11"
-      fill="#E8D7B5">
-JavaScript
-</text>
-
-</g>
-
-
-
-<!-- Python -->
-
-<g>
-
-<rect x="200"
-      y="116"
-      width="92"
-      height="22"
-      rx="11"
-      fill="#D8B478"
-      fill-opacity="0.12"
-      stroke="#D8B478"
-      stroke-opacity="0.5"/>
-
-<circle cx="212"
-        cy="127"
-        r="3"
-        fill="#D8B478"/>
-
-<text x="222"
-      y="131"
-      font-size="11"
-      fill="#E8D7B5">
-Python
-</text>
-
-</g>
-
-
-
-<!-- TS -->
-
-<g>
-
-<rect x="300"
-      y="116"
-      width="125"
-      height="22"
-      rx="11"
-      fill="#D8B478"
-      fill-opacity="0.12"
-      stroke="#D8B478"
-      stroke-opacity="0.5"/>
-
-<circle cx="312"
-        cy="127"
-        r="3"
-        fill="#D8B478"/>
-
-<text x="322"
-      y="131"
-      font-size="11"
-      fill="#E8D7B5">
-TypeScript
-</text>
-
-</g>
-
-
-
-
-
-<!-- 境界 -->
-
-<text x="24"
-      y="176"
-      font-size="36"
-      fill="#E8B86D"
-      font-weight="800">
-化神·中期
-</text>
-
-
-
-<text x="26"
-      y="198"
-      font-size="11"
-      fill="#9A93B8">
-下一境：炼虚 · 预计 68 个月
-</text>
-
-
-
-
-<!-- 灵力条 -->
-
-<rect x="24"
-      y="212"
-      width="432"
-      height="10"
-      rx="5"
-      fill="#241F35"/>
-
-
-<rect x="24"
-      y="212"
-      width="203"
-      height="10"
-      rx="5"
-      fill="url(#energy)"/>
-
-
-<text x="456"
-      y="221"
-      text-anchor="end"
-      font-size="11"
-      fill="#E8B86D">
-47%
-</text>
-
-
-
-
-<!-- 属性卡 -->
-
-<g>
-
-<rect x="24"
-      y="238"
-      width="102"
-      height="42"
-      rx="12"
-      fill="#FFFFFF"
-      fill-opacity="0.04"
-      stroke="#8E8CD8"
-      stroke-opacity="0.3"/>
-
-
-<text x="75"
-      y="257"
-      text-anchor="middle"
-      font-size="16"
-      fill="#F4E9D8"
-      font-weight="700">
-2343
-</text>
-
-
-<text x="75"
-      y="272"
-      text-anchor="middle"
-      font-size="9"
-      fill="#8E8CD8">
-寿元
-</text>
-
-</g>
-
-
-
-<g>
-
-<rect x="134"
-      y="238"
-      width="102"
-      height="42"
-      rx="12"
-      fill="#FFFFFF"
-      fill-opacity="0.04"
-      stroke="#8E8CD8"
-      stroke-opacity="0.3"/>
-
-
-<text x="185"
-      y="257"
-      text-anchor="middle"
-      font-size="16"
-      fill="#F4E9D8"
-      font-weight="700">
-70
-</text>
-
-
-<text x="185"
-      y="272"
-      text-anchor="middle"
-      font-size="9"
-      fill="#8E8CD8">
-洞府
-</text>
-
-</g>
-
-
-
-<g>
-
-<rect x="244"
-      y="238"
-      width="102"
-      height="42"
-      rx="12"
-      fill="#FFFFFF"
-      fill-opacity="0.04"
-      stroke="#8E8CD8"
-      stroke-opacity="0.3"/>
-
-
-<text x="295"
-      y="257"
-      text-anchor="middle"
-      font-size="16"
-      fill="#F4E9D8"
-      font-weight="700">
-11
-</text>
-
-
-<text x="295"
-      y="272"
-      text-anchor="middle"
-      font-size="9"
-      fill="#8E8CD8">
-法宝
-</text>
-
-</g>
-
-
-
-
-<g>
-
-<rect x="354"
-      y="238"
-      width="102"
-      height="42"
-      rx="12"
-      fill="#FFFFFF"
-      fill-opacity="0.04"
-      stroke="#8E8CD8"
-      stroke-opacity="0.3"/>
-
-
-<text x="405"
-      y="257"
-      text-anchor="middle"
-      font-size="16"
-      fill="#F4E9D8"
-      font-weight="700">
-0
-</text>
-
-
-<text x="405"
-      y="272"
-      text-anchor="middle"
-      font-size="9"
-      fill="#8E8CD8">
-道众
-</text>
-
-</g>
-
-
-
-
-<!-- 底部铭文 -->
-
-<text x="456"
-      y="294"
-      text-anchor="end"
-      font-size="9"
-      fill="#8E8CD8"
-      fill-opacity="0.35">
-大道五十 · 天衍四九
-</text>
-
-
+<rect x="1" y="1" width="478" height="298" rx="18" fill="rgba(13,17,23,0.96)" stroke="url(#frame)" stroke-width="2"/>
+
+  <text x="24" y="22" font-size="14" fill="#8E8CD8" text-anchor="start" font-weight="700" opacity="1" letter-spacing="1">☯ 修仙档案 · 自动定境</text>
+  <text x="456" y="22" font-size="10" fill="#6F6888" text-anchor="end" font-weight="400" opacity="1" letter-spacing="0">更新于 08-06 14:26</text>
+  
+  <clipPath id="avclip"><rect x="24" y="42" width="56" height="56" rx="16"/></clipPath>
+  <image href="https://avatars.githubusercontent.com/u/61879892?u=75b008c7e973c420353e80a7e0f2bdfb8b84ae9a&amp;v=4" xlink:href="https://avatars.githubusercontent.com/u/61879892?u=75b008c7e973c420353e80a7e0f2bdfb8b84ae9a&amp;v=4" x="24" y="42" width="56" height="56" clip-path="url(#avclip)"/>
+  <rect x="24" y="42" width="56" height="56" rx="16" fill="none" stroke="#D96C6C" stroke-width="2"/>
+  <circle cx="30" cy="48" r="5" fill="#D96C6C" opacity="0.35"/>
+  <text x="96" y="66" font-size="21" fill="#E6E1F5" text-anchor="start" font-weight="700" opacity="1" letter-spacing="0">Mitchll</text>
+  <text x="96" y="88" font-size="11" fill="#7A7393" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">@Mitchll1214 · 注册于 2020-03-06</text>
+  <text x="24" y="122" font-size="11" fill="#7A7393" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">灵根</text><g>
+        <rect x="64" y="108" width="136" height="20" rx="10" fill="rgba(255,255,255,0.05)" stroke="#F1E05A" stroke-opacity="0.5" stroke-width="1"/>
+        <circle cx="76" cy="118" r="3.6" fill="#F1E05A"/>
+        <text x="85" y="122" font-size="11" fill="#C9C3E0">JavaScript</text>
+      </g><g>
+        <rect x="206" y="108" width="92" height="20" rx="10" fill="rgba(255,255,255,0.05)" stroke="#3572A5" stroke-opacity="0.5" stroke-width="1"/>
+        <circle cx="218" cy="118" r="3.6" fill="#3572A5"/>
+        <text x="227" y="122" font-size="11" fill="#C9C3E0">Python</text>
+      </g><g>
+        <rect x="304" y="108" width="136" height="20" rx="10" fill="rgba(255,255,255,0.05)" stroke="#3178C6" stroke-opacity="0.5" stroke-width="1"/>
+        <circle cx="316" cy="118" r="3.6" fill="#3178C6"/>
+        <text x="325" y="122" font-size="11" fill="#C9C3E0">TypeScript</text>
+      </g>
+  <text x="24" y="162" font-size="42" fill="#D96C6C" text-anchor="start" font-weight="800" opacity="1" letter-spacing="0">化神·中期</text>
+  <text x="456" y="162" font-size="17" fill="#ffa3a3" text-anchor="end" font-weight="700" opacity="1" letter-spacing="0">47%</text>
+  <text x="24" y="184" font-size="11.5" fill="#9A93B8" text-anchor="start" font-weight="400" opacity="1" letter-spacing="0">下一境：炼虚 · 还需约 68 个月</text>
+  <rect x="24" y="196" width="432" height="10" rx="4" fill="rgba(255,255,255,0.10)"/>
+<rect x="24" y="196" width="203.04" height="10" rx="4" fill="url(#bar24196)"/>
+<defs><linearGradient id="bar24196" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D96C6C"/><stop offset="1" stop-color="#ffa3a3"/></linearGradient></defs>
+  <g>
+        <rect x="24" y="222" width="105" height="58" rx="12" fill="rgba(255,255,255,0.05)" stroke="#D96C6C" stroke-opacity="0.22" stroke-width="1"/>
+        <text x="35" y="243" font-size="12">☀️</text>
+        <text x="76.5" y="260" font-size="17" fill="#F2EFFA" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="0">2343</text>
+        <text x="76.5" y="275" font-size="9.5" fill="#8B84A8" text-anchor="middle" font-weight="400" opacity="1" letter-spacing="0">寿元（天）</text>
+      </g><g>
+        <rect x="133" y="222" width="105" height="58" rx="12" fill="rgba(255,255,255,0.05)" stroke="#D96C6C" stroke-opacity="0.22" stroke-width="1"/>
+        <text x="144" y="243" font-size="12">🏯</text>
+        <text x="185.5" y="260" font-size="17" fill="#F2EFFA" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="0">70</text>
+        <text x="185.5" y="275" font-size="9.5" fill="#8B84A8" text-anchor="middle" font-weight="400" opacity="1" letter-spacing="0">洞府（仓库）</text>
+      </g><g>
+        <rect x="242" y="222" width="105" height="58" rx="12" fill="rgba(255,255,255,0.05)" stroke="#D96C6C" stroke-opacity="0.22" stroke-width="1"/>
+        <text x="253" y="243" font-size="12">⚔️</text>
+        <text x="294.5" y="260" font-size="17" fill="#F2EFFA" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="0">11</text>
+        <text x="294.5" y="275" font-size="9.5" fill="#8B84A8" text-anchor="middle" font-weight="400" opacity="1" letter-spacing="0">法宝（Star）</text>
+      </g><g>
+        <rect x="351" y="222" width="105" height="58" rx="12" fill="rgba(255,255,255,0.05)" stroke="#D96C6C" stroke-opacity="0.22" stroke-width="1"/>
+        <text x="362" y="243" font-size="12">👥</text>
+        <text x="403.5" y="260" font-size="17" fill="#F2EFFA" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="0">0</text>
+        <text x="403.5" y="275" font-size="9.5" fill="#8B84A8" text-anchor="middle" font-weight="400" opacity="1" letter-spacing="0">道众（粉丝）</text>
+      </g>
+  <g opacity="0.5">
+    <path d="M230 292 l10 0 M235 287 l0 10" stroke="#8E8CD8" stroke-width="1.2" fill="none"/>
+  </g>
 </svg>
