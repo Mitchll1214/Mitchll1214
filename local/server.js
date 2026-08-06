@@ -24,7 +24,7 @@ const server = http.createServer(async (req, res) => {
   <img src="images/graph.svg" alt="修行年鉴"/>
   <img src="images/stats.svg" alt="修行记录"/>
   <img src="images/langs.svg" alt="灵根"/>
-  <img src="images/snake.svg" alt="灵蛇巡山"/>
+  <img src="images/snake.svg" alt="天道灵脉"/>
   <img src="images/trophy.svg" alt="修行成就"/>
 </body></html>`);
       return;

@@ -1,40 +1,181 @@
-// 灵宠「小九」渲染库（活跃度驱动）
+// 灵宠「龙仔」渲染库（活跃度驱动，Q 萌小青龙样式）
 // 供 local/generate.js（GitHub Actions）与 local/server.js（本地预览）调用。
+// 样式为手绘青龙卡（CSS 动画），数据（成长/灵力/亲密度/统计）全部动态注入。
 import { getContributions } from './_lib/github.js';
 import { computePet } from './_lib/pet.js';
-import { drawFox, moodDecor } from './_lib/fox.js';
-import { svgWrap, text, badge, bar } from './_lib/svg.js';
 
-const STAGE_COLORS = ['#C9B187', '#F2A65A', '#E0A526', '#D96C6C', '#A78BFA'];
+// 龙的成长阶段（沿用活跃度驱动逻辑，仅换龙系命名）
+const DRAGON_STAGES = ['龙蛋', '幼龙', '青龙', '应龙', '神龙'];
 
 export async function renderPet(username, { days } = {}) {
   const list = days || (await getContributions(username).catch(() => null));
   const p = computePet(list);
 
-  const fx = 132;
-  const fy = 140;
-  const data = p.a
-    ? `今日 ${p.a.todayCount} 次提交 · 连续 ${p.a.streak} 天 · 近一年 ${p.a.yearTotal} 次`
-    : '贡献数据暂不可得 · 灵兽于雾中沉睡';
+  const today = p.a?.todayCount ?? 0;
+  const streak = p.a?.streak ?? 0;
+  const yearTotal = p.a?.yearTotal ?? 0;
+  const subtitle = p.a && p.a.todayCount > 0
+    ? '龙行云海 · 今日有灵气入体 ✨'
+    : `龙行云海 · ${p.mood.label}`;
+  const spiritW = Math.round((p.spirit / 100) * 204);
+  const bondW = Math.round((p.bond / 100) * 204);
 
-  const body = `
-  ${drawFox({ stageIdx: p.stage.idx, mood: p.mood.key, cx: fx, cy: fy, dim: p.a === null })}
-  ${moodDecor(p.mood.key, fx, fy)}
-  ${text({ x: 272, y: 46, s: '🦊 灵宠 · 小九', size: 18, weight: 700 })}
-  ${badge(272, 58, `成长 · ${p.stage.name}`, STAGE_COLORS[p.stage.idx])}
-  ${text({ x: 272, y: 112, s: p.mood.label, size: 13.5, fill: p.mood.color })}
-  ${text({ x: 272, y: 138, s: '灵力 · 近30日', size: 11.5, fill: '#9A93B8' })}
-  ${text({ x: 468, y: 138, s: `${p.spirit}%`, size: 11.5, fill: '#C8A2F0', anchor: 'end', weight: 600 })}
-  ${bar({ x: 272, y: 146, w: 196, h: 9, pct: p.spirit, from: '#8E8CD8', to: '#C8A2F0' })}
-  ${text({ x: 272, y: 180, s: `亲密度 · 连续${p.a ? p.a.streak : 0}天`, size: 11.5, fill: '#9A93B8' })}
-  ${text({ x: 468, y: 180, s: `${p.bond}%`, size: 11.5, fill: '#FFD98A', anchor: 'end', weight: 600 })}
-  ${bar({ x: 272, y: 188, w: 196, h: 9, pct: p.bond, from: '#F0A75B', to: '#FFD98A' })}
-  ${text({ x: 272, y: 238, s: data, size: 11.5, fill: '#7A7393' })}
-  <g opacity="0.5">
-    <circle cx="24" cy="278" r="6" fill="none" stroke="#8E8CD8" stroke-width="1.2"/>
-    <circle cx="24" cy="278" r="2" fill="#8E8CD8"/>
-    <path d="M456 274 l6 6 l-12 0 Z" fill="#8E8CD8"/>
-  </g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="480" height="290" viewBox="0 0 480 290" role="img" aria-label="灵宠小龙状态卡片">
+  <defs>
+    <linearGradient id="card-bg-dragon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06121e" />
+      <stop offset="50%" stop-color="#0d1d2d" />
+      <stop offset="100%" stop-color="#050b14" />
+    </linearGradient>
 
-  return svgWrap({ width: 480, height: 300, body, border: '#8E8CD8' });
+    <linearGradient id="dragon-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#1e293b" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.8" />
+    </linearGradient>
+
+    <linearGradient id="dragon-mana-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+
+    <linearGradient id="dragon-intimacy-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+
+    <linearGradient id="dragon-skin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <linearGradient id="dragon-horn" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <radialGradient id="dragon-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#06121e" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <style>
+    text {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+    .dragon-floating {
+      transform-origin: 130px 145px;
+      animation: float 3.6s ease-in-out infinite;
+    }
+    .dragon-aura {
+      transform-origin: 130px 145px;
+      animation: pulse 2.8s ease-in-out infinite alternate;
+    }
+    .sparkle {
+      animation: blink 2s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.92); opacity: 0.5; }
+      100% { transform: scale(1.08); opacity: 0.9; }
+    }
+    @keyframes blink {
+      0% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+  </style>
+
+  <!-- 主卡片背景 -->
+  <rect x="2" y="2" width="476" height="286" rx="16" fill="url(#card-bg-dragon)" stroke="url(#dragon-border)" stroke-width="1.5" />
+
+  <circle class="dragon-aura" cx="130" cy="145" r="82" fill="url(#dragon-glow)" />
+
+  <g class="sparkle">
+    <path d="M 60 70 Q 60 60 50 60 Q 60 60 60 50 Q 60 60 70 60 Q 60 60 60 70 Z" fill="#38bdf8" />
+    <path d="M 195 85 Q 195 78 188 78 Q 195 78 195 71 Q 195 78 202 78 Q 195 78 195 85 Z" fill="#34d399" />
+    <circle cx="70" cy="205" r="2.5" fill="#fef08a" />
+    <circle cx="190" cy="195" r="2" fill="#38bdf8" />
+  </g>
+
+  <!-- 灵宠形象：Q萌玄青小神龙 -->
+  <g class="dragon-floating">
+    <path d="M 150 165 C 185 175 205 145 190 120 C 180 135 165 150 142 158 Z" fill="url(#dragon-skin)" />
+    <path d="M 190 120 Q 202 108 200 98 Q 188 110 182 125 Z" fill="#34d399" />
+
+    <path d="M 98 140 C 78 120 62 135 75 152 C 86 150 96 145 102 142 Z" fill="#0284c7" />
+    <path d="M 162 140 C 182 120 198 135 185 152 C 174 150 164 145 158 142 Z" fill="#0284c7" />
+
+    <ellipse cx="130" cy="168" rx="28" ry="24" fill="url(#dragon-skin)" />
+    <ellipse cx="130" cy="170" rx="16" ry="15" fill="#e0f2fe" />
+    <line x1="120" y1="165" x2="140" y2="165" stroke="#bae6fd" stroke-width="1.2" />
+    <line x1="118" y1="171" x2="142" y2="171" stroke="#bae6fd" stroke-width="1.2" />
+    <line x1="122" y1="177" x2="138" y2="177" stroke="#bae6fd" stroke-width="1.2" />
+
+    <ellipse cx="116" cy="188" rx="6" ry="4.5" fill="#38bdf8" />
+    <ellipse cx="144" cy="188" rx="6" ry="4.5" fill="#38bdf8" />
+
+    <path d="M 106 100 Q 98 80 88 75 Q 98 88 108 102 Z" fill="url(#dragon-horn)" />
+    <path d="M 154 100 Q 162 80 172 75 Q 162 88 152 102 Z" fill="url(#dragon-horn)" />
+
+    <ellipse cx="130" cy="126" rx="35" ry="28" fill="url(#dragon-skin)" />
+    <path d="M 95 130 Q 82 135 88 142 Q 98 138 102 134 Z" fill="#38bdf8" />
+    <path d="M 165 130 Q 178 135 172 142 Q 162 138 158 134 Z" fill="#38bdf8" />
+
+    <circle cx="130" cy="108" r="4.5" fill="url(#dragon-horn)" />
+    <circle cx="128.5" cy="106.5" r="1.5" fill="#ffffff" />
+
+    <ellipse cx="112" cy="125" rx="6.5" ry="8.5" fill="#030712" />
+    <circle cx="110" cy="122" r="2.8" fill="#ffffff" />
+    <circle cx="114" cy="127" r="1.2" fill="#34d399" />
+
+    <ellipse cx="148" cy="125" rx="6.5" ry="8.5" fill="#030712" />
+    <circle cx="146" cy="122" r="2.8" fill="#ffffff" />
+    <circle cx="150" cy="127" r="1.2" fill="#34d399" />
+
+    <ellipse cx="103" cy="132" rx="5" ry="3" fill="#f43f5e" opacity="0.45" />
+    <ellipse cx="157" cy="132" rx="5" ry="3" fill="#f43f5e" opacity="0.45" />
+
+    <circle cx="127" cy="131" r="1" fill="#0284c7" />
+    <circle cx="133" cy="131" r="1" fill="#0284c7" />
+    <path d="M 126 135 Q 130 138 134 135" stroke="#030712" stroke-width="1.5" stroke-linecap="round" fill="none" />
+  </g>
+
+  <!-- 右侧：动态参数节点区 -->
+  <g transform="translate(252, 0)">
+    <text x="0" y="48" font-size="19" font-weight="700" fill="#f0fdf4">🐲 灵宠 · 龙仔</text>
+
+    <g transform="translate(122, 32)">
+      <rect x="0" y="0" width="72" height="22" rx="11" fill="#10b981" fill-opacity="0.18" stroke="#34d399" stroke-opacity="0.5" stroke-width="1" />
+      <text x="36" y="15" font-size="11" font-weight="600" fill="#a7f3d0" text-anchor="middle">成长 · ${DRAGON_STAGES[p.stage.idx]}</text>
+    </g>
+
+    <text x="0" y="80" font-size="13" fill="#94a3b8">${subtitle}</text>
+    <line x1="0" y1="96" x2="204" y2="96" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4" />
+
+    <g transform="translate(0, 114)">
+      <text x="0" y="0" font-size="12" fill="#94a3b8">灵力 · 近30日</text>
+      <text x="204" y="0" font-size="12" font-weight="700" fill="#34d399" text-anchor="end">${p.spirit}%</text>
+      <rect x="0" y="8" width="204" height="8" rx="4" fill="#0f172a" />
+      <rect x="0" y="8" width="${spiritW}" height="8" rx="4" fill="url(#dragon-mana-grad)" />
+    </g>
+
+    <g transform="translate(0, 156)">
+      <text x="0" y="0" font-size="12" fill="#94a3b8">亲密度 · 连续${streak}天</text>
+      <text x="204" y="0" font-size="12" font-weight="700" fill="#38bdf8" text-anchor="end">${p.bond}%</text>
+      <rect x="0" y="8" width="204" height="8" rx="4" fill="#0f172a" />
+      <rect x="0" y="8" width="${bondW}" height="8" rx="4" fill="url(#dragon-intimacy-grad)" />
+    </g>
+
+    <g transform="translate(0, 200)">
+      <rect x="0" y="0" width="204" height="38" rx="8" fill="#06121e" stroke="#1e293b" stroke-width="1" />
+      <text x="102" y="23" font-size="11" fill="#cbd5e1" text-anchor="middle">
+        今日 <tspan fill="#34d399" font-weight="bold">${today}</tspan> 次提交 · 连续 <tspan fill="#38bdf8" font-weight="bold">${streak}</tspan> 天 · 近一年 <tspan fill="#a7f3d0" font-weight="bold">${yearTotal}</tspan> 次
+      </text>
+    </g>
+  </g>
+</svg>`;
 }

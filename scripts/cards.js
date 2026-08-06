@@ -1,5 +1,5 @@
-// 自建卡片渲染：统计卡 / 语言卡 / 贡献热力图 / 成就奖杯 / 打字横幅(SMIL) / 贪吃蛇(SMIL)。
-// 全部为纯静态 SVG + SMIL 动画，可被 GitHub 直接渲染，零第三方服务。
+// 自建卡片渲染：统计卡 / 语言卡 / 贡献热力图 / 成就奖杯 / 道号横幅(滚动字幕) / 天道灵脉游龙录(动画)。
+// 全部为纯静态 SVG + SMIL/CSS 动画，可被 GitHub 直接渲染，零第三方服务。
 import { svgWrap, text, esc, star } from '../api/_lib/svg.js';
 
 export const LANG_COLORS = {
@@ -24,24 +24,65 @@ export function levelOf(count, max) {
 }
 const HEAT = ['rgba(142,140,216,0.10)', 'rgba(142,140,216,0.32)', 'rgba(142,140,216,0.55)', 'rgba(142,140,216,0.80)', '#C8A2F0'];
 
-/** 打字横幅（SMIL 轮播） */
+/** 道号横幅（横向滚动字幕 · SMIL 动画） */
 export function renderBanner(lines, { width = 480, height = 56 } = {}) {
-  const n = lines.length;
-  const per = 6; // 每句展示秒数
-  const total = per * n;
-  const t = lines
-    .map(
-      (line, i) => `<text x="50%" y="50%" font-size="20" font-weight="600" fill="#8E8CD8" text-anchor="middle" dominant-baseline="central" letter-spacing="2">
-    ${esc(line)}
-    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="${total}s" begin="${i * per}s" repeatCount="indefinite"/>
-  </text>`,
-    )
-    .join('');
-  const deco = `<g opacity="0.6">
-    <circle cx="24" cy="28" r="2.5" fill="#8E8CD8"/>
-    <circle cx="456" cy="28" r="2.5" fill="#8E8CD8"/>
-  </g>`;
-  return svgWrap({ width, height, body: t + deco, border: '#8E8CD8' });
+  const content = (lines || []).join('\u3000\u3000') || '看破红尘善与恶\u3000\u3000只观因果静思安\u3000\u3000因果不虚，静观其变';
+  // 无缝滚动：副本间距 = 文本宽 + 间隙，动画位移 = 间距，循环点两副本位置重合，视觉无跳变
+  const textW = Math.round(content.length * 23); // 全角字符 ≈ font-size 20 + letter-spacing 3
+  const gap = 100;
+  const span = textW + gap;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+width="${width}"
+height="${height}"
+viewBox="0 0 480 56">
+
+<defs>
+
+<!-- 背景 -->
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#151822"/>
+    <stop offset="100%" stop-color="#080A10"/>
+</linearGradient>
+
+<!-- 边框 -->
+<linearGradient id="border">
+    <stop offset="0%" stop-color="#B5B3FF"/>
+    <stop offset="100%" stop-color="#403866"/>
+</linearGradient>
+
+<!-- 裁剪区域 -->
+<clipPath id="clip">
+    <rect x="12" y="5" width="456" height="46" rx="14"/>
+</clipPath>
+
+<!-- 发光 -->
+<filter id="glow">
+    <feGaussianBlur stdDeviation="2"/>
+    <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+</filter>
+
+</defs>
+
+<!-- 外框 -->
+<rect x="1" y="1" width="478" height="54" rx="18" fill="url(#bg)" stroke="url(#border)" stroke-width="2"/>
+
+<!-- 滚动窗口 -->
+<g clip-path="url(#clip)">
+<g font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="600" letter-spacing="3" fill="#A8A6FF" filter="url(#glow)">
+<text x="480" y="28" dy=".35em">${esc(content)}</text>
+<text x="${480 + span}" y="28" dy=".35em">${esc(content)}</text>
+<animateTransform attributeName="transform" type="translate" from="0" to="${-span}" dur="21s" repeatCount="indefinite"/>
+</g>
+</g>
+
+<!-- 装饰 -->
+<circle cx="24" cy="28" r="2.5" fill="#B5B3FF"/>
+<circle cx="456" cy="28" r="2.5" fill="#B5B3FF"/>
+
+</svg>`;
 }
 
 /** 修行记录统计卡：6 项指标 2 行 */
@@ -183,75 +224,77 @@ export function renderTrophy(data) {
   return svgWrap({ width: 480, height: 50 + 2 * ch + gapY + 14, body, border: '#8E8CD8' });
 }
 
-/** 贪吃蛇（SMIL：蛇身 stroke-dashoffset 蠕动 + 蛇头 animateMotion 跟随） */
+/** 天道灵脉 · 游龙修炼录（灵脉流光 + 游龙珠 · SMIL 动画，纯装饰卡） */
 export function renderSnake(days, yearTotal) {
-  const cell = 5;
-  const gap = 2;
-  const step = cell + gap;
-  const X0 = 40;
-  const Y0 = 40;
-  const maxCount = Math.max(1, ...days.map((d) => d.count));
-  const map = new Map(days.map((d) => [d.date, d.count]));
-  const today = new Date();
-  const end = new Date(today.getTime() + (6 - today.getUTCDay()) * 86400e3);
-  const start = new Date(end.getTime() - 363 * 86400e3);
-  // 生成 53 周 × 7 天的格子
-  const cols = [];
-  let col = -1;
-  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
-    if (d.getUTCDay() === 0) { col++; cols[col] = []; }
-    const key = d.toISOString().slice(0, 10);
-    cols[col].push({ date: key, count: map.get(key) || 0 });
-  }
-  const cellsSvg = cols
-    .map((colArr, cx) =>
-      colArr
-        .map((c, cy) => {
-          const lv = levelOf(c.count, maxCount);
-          return `<rect x="${X0 + cx * step}" y="${Y0 + cy * step}" width="${cell}" height="${cell}" rx="1.2" fill="${HEAT[Math.min(lv, 3)]}" opacity="0.55"/>`;
-        })
-        .join(''),
-    )
-    .join('');
-  // 蛇的游动路径（S 形横穿）。pathLength=100 归一化：蛇身 dash 与蛇头 motion 用同一长度基准，严格同步。
-  const snakePath = 'M40 84 C 110 84, 130 48, 200 48 C 270 48, 290 116, 360 116 C 400 116, 420 84, 452 84';
-  // dash 图案：实 20 + 空 80（周期 100）。offset 0→-100 时实段起点沿路径 0%→100% 匀速爬行
-  const snakeBody = `<path d="${snakePath}" pathLength="100" fill="none" stroke="url(#snakeGrad)" stroke-width="11" stroke-linecap="round" stroke-dasharray="20 80">
-    <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="8s" repeatCount="indefinite"/>
-  </path>`;
-  const snakeHead = `<g>
-    <circle r="8" fill="#34D399" stroke="#0D1117" stroke-width="1.5">
-      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
-    </circle>
-    <circle cx="3.5" cy="-1.5" r="1.6" fill="#0D1117">
-      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
-    </circle>
-  </g>`;
-  const foods = ['48,26', '240,120', '420,44', '330,24']
-    .map((p, i) => {
-      const [fx, fy] = p.split(',').map(Number);
-      const pts = [];
-      for (let k = 0; k < 8; k++) {
-        const a = (k * Math.PI) / 4 - Math.PI / 2;
-        const rad = k % 2 === 0 ? 5 : 1.9;
-        pts.push(`${(fx + rad * Math.cos(a)).toFixed(1)},${(fy + rad * Math.sin(a)).toFixed(1)}`);
-      }
-      return `<polygon points="${pts.join(' ')}" fill="#FFD98A"><animate attributeName="opacity" values="1;0.3;1" dur="${2 + i}s" repeatCount="indefinite"/></polygon>`;
-    })
-    .join('');
-  const body = `
-    <defs>
-      <linearGradient id="snakeGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="#8E8CD8"/>
-      </linearGradient>
-      <path id="snakeRoute" d="${snakePath}"/>
-    </defs>
-    ${text({ x: 24, y: 30, s: '🐍 灵蛇巡山 · 吃掉你的提交', size: 14, weight: 700, spacing: 1 })}
-    ${text({ x: 456, y: 30, s: `${yearTotal} 颗灵气`, size: 11, fill: '#7A7393', anchor: 'end' })}
-    ${cellsSvg}
-    ${snakeBody}
-    ${snakeHead}
-    ${foods}
-  `;
-  return svgWrap({ width: 480, height: 140, body, border: '#34D399' });
+  // days/yearTotal 参数保留以兼容调用方；本卡为纯动画装饰，不展示数据
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+ width="480"
+ height="180"
+ viewBox="0 0 480 180"
+ role="img"
+ font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
+
+<defs>
+
+<!-- 外框 -->
+<linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#D8B478"/>
+<stop offset="0.5" stop-color="#8E8CD8"/>
+<stop offset="1" stop-color="#D96C6C"/>
+</linearGradient>
+
+<!-- 灵脉 -->
+<linearGradient id="spirit" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#D8B478"/>
+<stop offset="0.45" stop-color="#FFF1B8"/>
+<stop offset="1" stop-color="#8E8CD8"/>
+</linearGradient>
+
+<!-- 光晕 -->
+<filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+
+<!-- 游龙路径 -->
+<path id="dragon" d="M42 105 C100 105 125 60 200 60 C280 60 310 125 380 125 C415 125 435 105 450 95"/>
+
+</defs>
+
+<!-- 背景 -->
+<rect x="1" y="1" width="478" height="178" rx="22" fill="#0D1117" stroke="url(#frame)" stroke-width="2"/>
+
+<!-- 星尘 -->
+<g fill="#D8B478">
+<circle cx="80" cy="55" r="1.5"><animate attributeName="opacity" values="0.2;1;0.2" dur="3s" repeatCount="indefinite"/></circle>
+<circle cx="260" cy="35" r="1.2"><animate attributeName="opacity" values="1;0.2;1" dur="2.5s" repeatCount="indefinite"/></circle>
+<circle cx="420" cy="55" r="1.5"><animate attributeName="opacity" values="0.2;1;0.2" dur="4s" repeatCount="indefinite"/></circle>
+</g>
+
+<!-- 标题 -->
+<text x="24" y="32" font-size="14" font-weight="700" fill="#F4E9D8">☯ 天道灵脉 · 游龙修炼录</text>
+<text x="456" y="32" text-anchor="end" font-size="10" fill="#8E8CD8">GITHUB CULTIVATION</text>
+<line x1="24" y1="45" x2="456" y2="45" stroke="#8E8CD8" stroke-opacity="0.25"/>
+
+<!-- 灵脉外层 -->
+<use href="#dragon" xlink:href="#dragon" stroke="#D8B478" stroke-width="14" opacity="0.2" fill="none" filter="url(#glow)"/>
+
+<!-- 灵脉主体 -->
+<use href="#dragon" xlink:href="#dragon" stroke="url(#spirit)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="22 18">
+<animate attributeName="stroke-dashoffset" from="0" to="-200" dur="3s" repeatCount="indefinite"/>
+</use>
+
+<!-- 游动龙珠 -->
+<circle r="6" fill="#FFF1B8"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#dragon" xlink:href="#dragon"/></animateMotion></circle>
+<circle r="18" fill="#D8B478" opacity="0.18" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#dragon" xlink:href="#dragon"/></animateMotion></circle>
+
+<!-- 灵脉节点 -->
+<g fill="#FFE6A7">
+<circle cx="42" cy="105" r="5"><animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="200" cy="60" r="5"><animate attributeName="r" values="5;7;5" dur="2.5s" repeatCount="indefinite"/></circle>
+<circle cx="380" cy="125" r="5"><animate attributeName="r" values="5;8;5" dur="3s" repeatCount="indefinite"/></circle>
+</g>
+
+<!-- 修炼等级 -->
+<text x="24" y="155" font-size="11" fill="#9A93B8">提交 = 修炼经验 · Commit = 灵气积累</text>
+<text x="456" y="155" text-anchor="end" font-size="11" fill="#D8B478">✦ 灵脉流转中</text>
+
+</svg>`;
 }

@@ -2,7 +2,7 @@
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 export function svgWrap({ width, height, body, bg = 'rgba(13,17,23,0.96)', border = '#8E8CD8' }) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
 <defs>
   <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="${border}" stop-opacity="0.9"/>

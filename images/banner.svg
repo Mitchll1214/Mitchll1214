@@ -1,12 +1,9 @@
-<svg 
-xmlns="http://www.w3.org/2000/svg"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 width="480"
 height="56"
 viewBox="0 0 480 56">
 
-
 <defs>
-
 
 <!-- 背景 -->
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -14,24 +11,16 @@ viewBox="0 0 480 56">
     <stop offset="100%" stop-color="#080A10"/>
 </linearGradient>
 
-
 <!-- 边框 -->
 <linearGradient id="border">
     <stop offset="0%" stop-color="#B5B3FF"/>
     <stop offset="100%" stop-color="#403866"/>
 </linearGradient>
 
-
 <!-- 裁剪区域 -->
 <clipPath id="clip">
-    <rect
-    x="12"
-    y="5"
-    width="456"
-    height="46"
-    rx="14"/>
+    <rect x="12" y="5" width="456" height="46" rx="14"/>
 </clipPath>
-
 
 <!-- 发光 -->
 <filter id="glow">
@@ -42,101 +31,22 @@ viewBox="0 0 480 56">
     </feMerge>
 </filter>
 
-
 </defs>
 
-
-
 <!-- 外框 -->
-
-<rect
-x="1"
-y="1"
-width="478"
-height="54"
-rx="18"
-fill="url(#bg)"
-stroke="url(#border)"
-stroke-width="2"/>
-
-
+<rect x="1" y="1" width="478" height="54" rx="18" fill="url(#bg)" stroke="url(#border)" stroke-width="2"/>
 
 <!-- 滚动窗口 -->
-
 <g clip-path="url(#clip)">
-
-
-
-<g
-font-family="PingFang SC,Microsoft YaHei,sans-serif"
-font-size="20"
-font-weight="600"
-letter-spacing="3"
-fill="#A8A6FF"
-filter="url(#glow)">
-
-
-
-<!-- 第一组 -->
-
-<text
-x="480"
-y="28"
-dy=".35em">
-
-看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变
-
-</text>
-
-
-
-<!-- 第二组复制 -->
-
-<text
-x="1280"
-y="28"
-dy=".35em">
-
-看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变
-
-</text>
-
-
-
-
-<!-- 整体移动 -->
-
-<animateTransform
-attributeName="transform"
-type="translate"
-from="0"
-to="-800"
-dur="21s"
-repeatCount="indefinite"/>
-
-
+<g font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="600" letter-spacing="3" fill="#A8A6FF" filter="url(#glow)">
+<text x="480" y="28" dy=".35em">看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变</text>
+<text x="1201" y="28" dy=".35em">看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变</text>
+<animateTransform attributeName="transform" type="translate" from="0" to="-721" dur="21s" repeatCount="indefinite"/>
 </g>
-
-
 </g>
-
-
 
 <!-- 装饰 -->
-
-<circle
-cx="24"
-cy="28"
-r="2.5"
-fill="#B5B3FF"/>
-
-
-<circle
-cx="456"
-cy="28"
-r="2.5"
-fill="#B5B3FF"/>
-
-
+<circle cx="24" cy="28" r="2.5" fill="#B5B3FF"/>
+<circle cx="456" cy="28" r="2.5" fill="#B5B3FF"/>
 
 </svg>
