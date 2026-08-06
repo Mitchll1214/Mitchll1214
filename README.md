@@ -68,7 +68,8 @@
   </p>
   <p align="left">
     <b>更新机制</b>：<code>.github/workflows/update-profile.yml</code> 定时（每天 08:17 北京时间）或手动触发，用 <code>GITHUB_TOKEN</code> 调 GitHub 官方 GraphQL API 实时采集数据，按 <code>api/</code>、<code>scripts/</code> 中的代码重新渲染全部卡片并提交回仓库 —— 全程只依赖 GitHub 自身，不调用任何第三方平台。<br>
-    修改卡片样式：编辑 <code>api/</code>（修仙档案/灵宠）或 <code>scripts/</code>（年鉴/记录/灵根/成就/灵蛇等）下的代码后 push，workflow 会自动用新代码重新生成；也可在仓库 Actions 页手动点击 <b>Run workflow</b> 立即刷新。<br>
+    修改卡片样式：编辑 <code>api/</code>（修仙档案/灵宠）或 <code>scripts/</code>（年鉴/记录/灵根/成就/灵蛇等）下的代码（<code>local/</code> 与 workflow 文件本身也在 push 触发范围内）后 push，workflow 会自动拉取最新数据、用新代码重新生成全部卡片并提交回仓库；也可在仓库 Actions 页手动点击 <b>Run workflow</b> 立即刷新。<br>
+    ⚠ <code>images/</code> 下的 SVG 均为自动生成产物：手动编辑会被下次生成覆盖；且仅改动 <code>README.md</code> 或 <code>images/</code> 不会触发自动更新（改完需手动 Run workflow 或等待定时任务）。<br>
     本地预览：<code>node local/generate.js --mock</code>（合成数据）→ 查看 <code>images/</code> 下的 SVG；或 <code>node local/server.js</code> → <code>http://localhost:8787/preview</code>。
   </p>
 </details>
