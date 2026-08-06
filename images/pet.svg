@@ -79,7 +79,7 @@
     <circle cx="190" cy="195" r="2" fill="#38bdf8" />
   </g>
 
-  <!-- ----------------- 灵宠形象：Q萌玄青小神龙 ----------------- -->
+  <!-- 灵宠形象：Q萌玄青小神龙 -->
   <g class="dragon-floating">
     <path d="M 150 165 C 185 175 205 145 190 120 C 180 135 165 150 142 158 Z" fill="url(#dragon-skin)" />
     <path d="M 190 120 Q 202 108 200 98 Q 188 110 182 125 Z" fill="#34d399" />
@@ -122,7 +122,7 @@
     <path d="M 126 135 Q 130 138 134 135" stroke="#030712" stroke-width="1.5" stroke-linecap="round" fill="none" />
   </g>
 
-  <!-- ----------------- 右侧：动态参数节点区 ----------------- -->
+  <!-- 右侧：动态参数节点区 -->
   <g transform="translate(252, 0)">
     <text x="0" y="48" font-size="19" font-weight="700" fill="#f0fdf4">🐲 灵宠 · 龙仔</text>
     
