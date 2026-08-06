@@ -2,8 +2,9 @@ name: 修仙主页自动更新
 
 on:
   schedule:
-    # 每天 08:17 北京时间更新一次
+    # 每天 08:17 与 16:00 北京时间各更新一次
     - cron: '17 0 * * *'
+    - cron: '0 8 * * *'
   workflow_dispatch:
   push:
     paths:

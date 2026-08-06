@@ -75,7 +75,7 @@ if (mock) {
 // ── 2. 渲染 ─────────────────────────────────────────────
 const active = analyzeContributions(days);
 const realmInfo = computeRealm(new Date(user.created_at).getTime());
-const yearTotal = gql?.yearTotal ?? active?.yearTotal ?? 0;
+const yearTotal = active?.yearTotal ?? gql?.yearTotal ?? 0; // 统一口径：365 天求和，与灵宠/热力图一致
 const streak = active?.streak ?? 0;
 
 const realmSvg = await renderRealm(username, { data: { user, repoStats } });
