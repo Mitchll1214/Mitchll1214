@@ -22,7 +22,7 @@
 
 <!-- 4. 虚拟灵宠 · 龙仔（由近期活跃度驱动成长与心情） -->
 <div align="center">
-  <h4>🐲 虚拟灵宠 · 随活跃度成长</h4>
+  <h4>🐲 灵兽谱 · 以行饲之</h4>
   <img src="images/pet.svg" width="480" alt="灵宠龙仔" />
 </div>
 
@@ -30,8 +30,8 @@
 
 <!-- 5. 修行年鉴 · 近一年贡献热力图（自建） -->
 <div align="center">
-  <h4>📅 修行年鉴</h4>
-  <img src="images/graph.svg" width="480" alt="修行年鉴" />
+  <h4>📅 岁修录 · 天道铭之</h4>
+  <img src="images/graph.svg" width="480" alt="岁修录 · 天道铭之" />
 </div>
 
 <br>
