@@ -1,142 +1,22 @@
-<svg 
-xmlns="http://www.w3.org/2000/svg"
-width="480"
-height="56"
-viewBox="0 0 480 56">
-
-
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="56" viewBox="0 0 480 56" role="img" font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
 <defs>
-
-
-<!-- 背景 -->
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#151822"/>
-    <stop offset="100%" stop-color="#080A10"/>
-</linearGradient>
-
-
-<!-- 边框 -->
-<linearGradient id="border">
-    <stop offset="0%" stop-color="#B5B3FF"/>
-    <stop offset="100%" stop-color="#403866"/>
-</linearGradient>
-
-
-<!-- 裁剪区域 -->
-<clipPath id="clip">
-    <rect
-    x="12"
-    y="5"
-    width="456"
-    height="46"
-    rx="14"/>
-</clipPath>
-
-
-<!-- 发光 -->
-<filter id="glow">
-    <feGaussianBlur stdDeviation="2"/>
-    <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-    </feMerge>
-</filter>
-
-
+  <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#8E8CD8" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#3A3560" stop-opacity="0.9"/>
+  </linearGradient>
 </defs>
-
-
-
-<!-- 外框 -->
-
-<rect
-x="1"
-y="1"
-width="478"
-height="54"
-rx="18"
-fill="url(#bg)"
-stroke="url(#border)"
-stroke-width="2"/>
-
-
-
-<!-- 滚动窗口 -->
-
-<g clip-path="url(#clip)">
-
-
-
-<g
-font-family="PingFang SC,Microsoft YaHei,sans-serif"
-font-size="20"
-font-weight="600"
-letter-spacing="3"
-fill="#A8A6FF"
-filter="url(#glow)">
-
-
-
-<!-- 第一组 -->
-
-<text
-x="480"
-y="28"
-dy=".35em">
-
-看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变
-
-</text>
-
-
-
-<!-- 第二组复制 -->
-
-<text
-x="1280"
-y="28"
-dy=".35em">
-
-看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变
-
-</text>
-
-
-
-
-<!-- 整体移动 -->
-
-<animateTransform
-attributeName="transform"
-type="translate"
-from="0"
-to="-800"
-dur="21s"
-repeatCount="indefinite"/>
-
-
-</g>
-
-
-</g>
-
-
-
-<!-- 装饰 -->
-
-<circle
-cx="24"
-cy="28"
-r="2.5"
-fill="#B5B3FF"/>
-
-
-<circle
-cx="456"
-cy="28"
-r="2.5"
-fill="#B5B3FF"/>
-
-
-
+<rect x="1" y="1" width="478" height="54" rx="18" fill="rgba(13,17,23,0.96)" stroke="url(#frame)" stroke-width="2"/>
+<text x="50%" y="50%" font-size="20" font-weight="600" fill="#8E8CD8" text-anchor="middle" dominant-baseline="central" letter-spacing="2">
+    看破红尘善与恶
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="18s" begin="0s" repeatCount="indefinite"/>
+  </text><text x="50%" y="50%" font-size="20" font-weight="600" fill="#8E8CD8" text-anchor="middle" dominant-baseline="central" letter-spacing="2">
+    只观因果静思安
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="18s" begin="6s" repeatCount="indefinite"/>
+  </text><text x="50%" y="50%" font-size="20" font-weight="600" fill="#8E8CD8" text-anchor="middle" dominant-baseline="central" letter-spacing="2">
+    因果不虚，静观其变
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="18s" begin="12s" repeatCount="indefinite"/>
+  </text><g opacity="0.6">
+    <circle cx="24" cy="28" r="2.5" fill="#8E8CD8"/>
+    <circle cx="456" cy="28" r="2.5" fill="#8E8CD8"/>
+  </g>
 </svg>
