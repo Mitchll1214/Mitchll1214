@@ -47,7 +47,7 @@
 
 <!-- 7. 天道灵脉 · 游龙录（昨日修为 + 三十日道行数据卡） -->
 <div align="center">
-  <img src="images/snake.svg" width="800" alt="天道灵脉 · 游龙录" />
+  <img src="images/snake.svg" width="480" alt="天道灵脉 · 游龙录" />
 </div>
 
 <!-- 8. 修行成就 -->
