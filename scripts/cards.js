@@ -213,17 +213,18 @@ export function renderSnake(days, yearTotal) {
         .join(''),
     )
     .join('');
-  // 蛇的游动路径（S 形横穿）
+  // 蛇的游动路径（S 形横穿）。pathLength=100 归一化：蛇身 dash 与蛇头 motion 用同一长度基准，严格同步。
   const snakePath = 'M40 84 C 110 84, 130 48, 200 48 C 270 48, 290 116, 360 116 C 400 116, 420 84, 452 84';
-  const snakeBody = `<path d="${snakePath}" fill="none" stroke="url(#snakeGrad)" stroke-width="11" stroke-linecap="round" stroke-dasharray="95 330">
-    <animate attributeName="stroke-dashoffset" from="425" to="0" dur="6s" repeatCount="indefinite"/>
+  // dash 图案：实 20 + 空 80（周期 100）。offset 0→-100 时实段起点沿路径 0%→100% 匀速爬行
+  const snakeBody = `<path d="${snakePath}" pathLength="100" fill="none" stroke="url(#snakeGrad)" stroke-width="11" stroke-linecap="round" stroke-dasharray="20 80">
+    <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="8s" repeatCount="indefinite"/>
   </path>`;
   const snakeHead = `<g>
     <circle r="8" fill="#34D399" stroke="#0D1117" stroke-width="1.5">
-      <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#snakeRoute"/></animateMotion>
+      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
     </circle>
-    <circle cx="2.5" cy="-3" r="1.6" fill="#0D1117">
-      <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#snakeRoute"/></animateMotion>
+    <circle cx="3.5" cy="-1.5" r="1.6" fill="#0D1117">
+      <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href="#snakeRoute"/></animateMotion>
     </circle>
   </g>`;
   const foods = ['48,26', '240,120', '420,44', '330,24']

@@ -42,6 +42,7 @@ const svgs = {
 };
 for (const [name, svg] of Object.entries(svgs)) {
   assert.ok(svg.startsWith('<svg'), `${name} 应以 <svg 开头`);
+  assert.ok(!svg.includes('\uFFFD'), `${name} 不得包含乱码替换符 U+FFFD`);
   console.log(`✓ ${name}.svg（${svg.length} 字节）`);
 }
 

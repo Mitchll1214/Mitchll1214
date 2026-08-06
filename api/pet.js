@@ -1,5 +1,5 @@
-// Áé³è¡¸Ğ¡¾Å¡¹äÖÈ¾¿â£¨»îÔ¾¶ÈÇı¶¯£©
-// ¹© local/generate.js£¨GitHub Actions£©Óë local/server.js£¨±¾µØÔ¤ÀÀ£©µ÷ÓÃ¡£
+// çµå® ã€Œå°ä¹ã€æ¸²æŸ“åº“ï¼ˆæ´»è·ƒåº¦é©±åŠ¨ï¼‰
+// ä¾› local/generate.jsï¼ˆGitHub Actionsï¼‰ä¸ local/server.jsï¼ˆæœ¬åœ°é¢„è§ˆï¼‰è°ƒç”¨ã€‚
 import { getContributions } from './_lib/github.js';
 import { computePet } from './_lib/pet.js';
 import { drawFox, moodDecor } from './_lib/fox.js';
@@ -14,19 +14,19 @@ export async function renderPet(username, { days } = {}) {
   const fx = 132;
   const fy = 140;
   const data = p.a
-    ? `½ñÈÕ ${p.a.todayCount} ´ÎÌá½» ¡¤ Á¬Ğø ${p.a.streak} Ìì ¡¤ ½üÒ»Äê ${p.a.yearTotal} ´Î`
-    : '¹±Ï×Êı¾İÔİ²»¿ÉµÃ ¡¤ ÁéÊŞÓÚÎíÖĞ³ÁË¯';
+    ? `ä»Šæ—¥ ${p.a.todayCount} æ¬¡æäº¤ Â· è¿ç»­ ${p.a.streak} å¤© Â· è¿‘ä¸€å¹´ ${p.a.yearTotal} æ¬¡`
+    : 'è´¡çŒ®æ•°æ®æš‚ä¸å¯å¾— Â· çµå…½äºé›¾ä¸­æ²‰ç¡';
 
   const body = `
   ${drawFox({ stageIdx: p.stage.idx, mood: p.mood.key, cx: fx, cy: fy, dim: p.a === null })}
   ${moodDecor(p.mood.key, fx, fy)}
-  ${text({ x: 272, y: 46, s: '•0Ù2 Áé³è ¡¤ Ğ¡¾Å', size: 18, weight: 700 })}
-  ${badge(272, 58, `³É³¤ ¡¤ ${p.stage.name}`, STAGE_COLORS[p.stage.idx])}
+  ${text({ x: 272, y: 46, s: 'ğŸ¦Š çµå®  Â· å°ä¹', size: 18, weight: 700 })}
+  ${badge(272, 58, `æˆé•¿ Â· ${p.stage.name}`, STAGE_COLORS[p.stage.idx])}
   ${text({ x: 272, y: 112, s: p.mood.label, size: 13.5, fill: p.mood.color })}
-  ${text({ x: 272, y: 138, s: 'ÁéÁ¦ ¡¤ ½ü30ÈÕ', size: 11.5, fill: '#9A93B8' })}
+  ${text({ x: 272, y: 138, s: 'çµåŠ› Â· è¿‘30æ—¥', size: 11.5, fill: '#9A93B8' })}
   ${text({ x: 468, y: 138, s: `${p.spirit}%`, size: 11.5, fill: '#C8A2F0', anchor: 'end', weight: 600 })}
   ${bar({ x: 272, y: 146, w: 196, h: 9, pct: p.spirit, from: '#8E8CD8', to: '#C8A2F0' })}
-  ${text({ x: 272, y: 180, s: `Ç×ÃÜ¶È ¡¤ Á¬Ğø${p.a ? p.a.streak : 0}Ìì`, size: 11.5, fill: '#9A93B8' })}
+  ${text({ x: 272, y: 180, s: `äº²å¯†åº¦ Â· è¿ç»­${p.a ? p.a.streak : 0}å¤©`, size: 11.5, fill: '#9A93B8' })}
   ${text({ x: 468, y: 180, s: `${p.bond}%`, size: 11.5, fill: '#FFD98A', anchor: 'end', weight: 600 })}
   ${bar({ x: 272, y: 188, w: 196, h: 9, pct: p.bond, from: '#F0A75B', to: '#FFD98A' })}
   ${text({ x: 272, y: 238, s: data, size: 11.5, fill: '#7A7393' })}
