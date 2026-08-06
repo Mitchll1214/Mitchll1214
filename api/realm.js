@@ -87,7 +87,7 @@ export async function renderRealm(username, { data } = {}) {
   // ── 头像（圆角 16，境界色描边）──
   const avatarSvg = `
   <clipPath id="avclip"><rect x="24" y="42" width="56" height="56" rx="16"/></clipPath>
-  <image href="${esc(avatar)}" xlink:href="${esc(avatar)}" x="24" y="42" width="56" height="56" clip-path="url(#avclip)"/>
+  <image href="${esc(avatar)}" x="24" y="42" width="56" height="56" clip-path="url(#avclip)"/>
   <rect x="24" y="42" width="56" height="56" rx="16" fill="none" stroke="${color}" stroke-width="2"/>
   <circle cx="30" cy="48" r="5" fill="${color}" opacity="0.35"/>`;
 

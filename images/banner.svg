@@ -1,16 +1,142 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="480" height="64" viewBox="0 0 480 64" role="img" font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif">
-<defs>
-  <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#8E8CD8" stop-opacity="0.9"/>
-    <stop offset="1" stop-color="#3A3560" stop-opacity="0.9"/>
-  </linearGradient>
-</defs>
-<rect x="1" y="1" width="478" height="62" rx="18" fill="rgba(13,17,23,0.96)" stroke="url(#frame)" stroke-width="2"/>
+<svg 
+xmlns="http://www.w3.org/2000/svg"
+width="480"
+height="56"
+viewBox="0 0 480 56">
 
-  <line x1="30" y1="32" x2="66" y2="32" stroke="#8E8CD8" stroke-opacity="0.35" stroke-width="1.5"/>
-  <line x1="414" y1="32" x2="450" y2="32" stroke="#8E8CD8" stroke-opacity="0.35" stroke-width="1.5"/>
-  <text x="240" y="36" font-size="21" fill="#8E8CD8" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="2">看破红尘善与恶</text>
-  <text x="240" y="56" font-size="12" fill="#9A93B8" text-anchor="middle" font-weight="400" opacity="1" letter-spacing="0">只观因果静思安 · 因果不虚，静观其变</text>
-  <polygon points="20.0,17.0 21.3,20.7 25.0,22.0 21.3,23.3 20.0,27.0 18.7,23.3 15.0,22.0 18.7,20.7" fill="#C8A2F0"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0s" repeatCount="indefinite"/></polygon><polygon points="460.0,17.0 461.3,20.7 465.0,22.0 461.3,23.3 460.0,27.0 458.7,23.3 455.0,22.0 458.7,20.7" fill="#C8A2F0"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="1.5s" repeatCount="indefinite"/></polygon><polygon points="24.0,44.5 24.9,47.1 27.5,48.0 24.9,48.9 24.0,51.5 23.1,48.9 20.5,48.0 23.1,47.1" fill="#C8A2F0"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0.8s" repeatCount="indefinite"/></polygon><polygon points="456.0,44.5 456.9,47.1 459.5,48.0 456.9,48.9 456.0,51.5 455.1,48.9 452.5,48.0 455.1,47.1" fill="#C8A2F0"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="2.2s" repeatCount="indefinite"/></polygon>
-  
+
+<defs>
+
+
+<!-- 背景 -->
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#151822"/>
+    <stop offset="100%" stop-color="#080A10"/>
+</linearGradient>
+
+
+<!-- 边框 -->
+<linearGradient id="border">
+    <stop offset="0%" stop-color="#B5B3FF"/>
+    <stop offset="100%" stop-color="#403866"/>
+</linearGradient>
+
+
+<!-- 裁剪区域 -->
+<clipPath id="clip">
+    <rect
+    x="12"
+    y="5"
+    width="456"
+    height="46"
+    rx="14"/>
+</clipPath>
+
+
+<!-- 发光 -->
+<filter id="glow">
+    <feGaussianBlur stdDeviation="2"/>
+    <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+</filter>
+
+
+</defs>
+
+
+
+<!-- 外框 -->
+
+<rect
+x="1"
+y="1"
+width="478"
+height="54"
+rx="18"
+fill="url(#bg)"
+stroke="url(#border)"
+stroke-width="2"/>
+
+
+
+<!-- 滚动窗口 -->
+
+<g clip-path="url(#clip)">
+
+
+
+<g
+font-family="PingFang SC,Microsoft YaHei,sans-serif"
+font-size="20"
+font-weight="600"
+letter-spacing="3"
+fill="#A8A6FF"
+filter="url(#glow)">
+
+
+
+<!-- 第一组 -->
+
+<text
+x="480"
+y="28"
+dy=".35em">
+
+看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变
+
+</text>
+
+
+
+<!-- 第二组复制 -->
+
+<text
+x="1280"
+y="28"
+dy=".35em">
+
+看破红尘善与恶　　只观因果静思安　　因果不虚，静观其变
+
+</text>
+
+
+
+
+<!-- 整体移动 -->
+
+<animateTransform
+attributeName="transform"
+type="translate"
+from="0"
+to="-800"
+dur="21s"
+repeatCount="indefinite"/>
+
+
+</g>
+
+
+</g>
+
+
+
+<!-- 装饰 -->
+
+<circle
+cx="24"
+cy="28"
+r="2.5"
+fill="#B5B3FF"/>
+
+
+<circle
+cx="456"
+cy="28"
+r="2.5"
+fill="#B5B3FF"/>
+
+
+
 </svg>
