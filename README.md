@@ -1,7 +1,8 @@
 <!-- 1. 道号横幅（自建 SVG + SMIL 横向滚动字幕） -->
-<p align="center">
+<div align="center">
+  <h4>🪷 道号横幅 · 因果不虚</h4>
   <img src="images/banner.svg" width="480" alt="道号" />
-</p>
+</div>
 
 <!-- 2. 洞府主人 -->
 <div align="center">
@@ -38,8 +39,10 @@
 
 <!-- 6. 修行记录 + 灵根（自建统计卡） -->
 <div align="center">
+  <h4>📜 修行记录 · 六项指标</h4>
   <img src="images/stats.svg" width="480" alt="修行记录" />
   <br><br>
+  <h4>🧬 灵根 · 语言分布</h4>
   <img src="images/langs.svg" width="480" alt="灵根" />
 </div>
 
@@ -47,11 +50,13 @@
 
 <!-- 7. 天道灵脉 · 游龙录（昨日修为 + 三十日道行数据卡） -->
 <div align="center">
+  <h4>🐉 天道灵脉 · 游龙录</h4>
   <img src="images/snake.svg" width="480" alt="天道灵脉 · 游龙录" />
 </div>
 
 <!-- 8. 修行成就 -->
 <div align="center">
+  <h4>🏆 修行成就 · 称号一览</h4>
   <img src="images/trophy.svg" width="480" alt="修行成就" />
 </div>
 
