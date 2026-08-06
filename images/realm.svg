@@ -8,10 +8,10 @@
 <rect x="1" y="1" width="478" height="298" rx="18" fill="rgba(13,17,23,0.96)" stroke="url(#frame)" stroke-width="2"/>
 
   <text x="24" y="22" font-size="14" fill="#8E8CD8" text-anchor="start" font-weight="700" opacity="1" letter-spacing="1">☯ 修仙档案 · 自动定境</text>
-  <text x="456" y="22" font-size="10" fill="#6F6888" text-anchor="end" font-weight="400" opacity="1" letter-spacing="0">更新于 08-06 14:12</text>
+  <text x="456" y="22" font-size="10" fill="#6F6888" text-anchor="end" font-weight="400" opacity="1" letter-spacing="0">更新于 08-06 14:15</text>
   
   <clipPath id="avclip"><rect x="24" y="42" width="56" height="56" rx="16"/></clipPath>
-  <image href="https://avatars.githubusercontent.com/u/61879892?v=4" xlink:href="https://avatars.githubusercontent.com/u/61879892?v=4" x="24" y="42" width="56" height="56" clip-path="url(#avclip)"/>
+  <image href="https://avatars.githubusercontent.com/u/61879892?u=75b008c7e973c420353e80a7e0f2bdfb8b84ae9a&amp;v=4" xlink:href="https://avatars.githubusercontent.com/u/61879892?u=75b008c7e973c420353e80a7e0f2bdfb8b84ae9a&amp;v=4" x="24" y="42" width="56" height="56" clip-path="url(#avclip)"/>
   <rect x="24" y="42" width="56" height="56" rx="16" fill="none" stroke="#D96C6C" stroke-width="2"/>
   <circle cx="30" cy="48" r="5" fill="#D96C6C" opacity="0.35"/>
   <text x="96" y="66" font-size="21" fill="#E6E1F5" text-anchor="start" font-weight="700" opacity="1" letter-spacing="0">Mitchll</text>
@@ -43,7 +43,7 @@
       </g><g>
         <rect x="133" y="222" width="105" height="58" rx="12" fill="rgba(255,255,255,0.05)" stroke="#D96C6C" stroke-opacity="0.22" stroke-width="1"/>
         <text x="144" y="243" font-size="12">🏯</text>
-        <text x="185.5" y="260" font-size="17" fill="#F2EFFA" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="0">71</text>
+        <text x="185.5" y="260" font-size="17" fill="#F2EFFA" text-anchor="middle" font-weight="700" opacity="1" letter-spacing="0">70</text>
         <text x="185.5" y="275" font-size="9.5" fill="#8B84A8" text-anchor="middle" font-weight="400" opacity="1" letter-spacing="0">洞府（仓库）</text>
       </g><g>
         <rect x="242" y="222" width="105" height="58" rx="12" fill="rgba(255,255,255,0.05)" stroke="#D96C6C" stroke-opacity="0.22" stroke-width="1"/>
