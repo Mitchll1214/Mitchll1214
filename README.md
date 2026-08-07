@@ -71,7 +71,7 @@
     <b>🐉 天道灵脉 · 游龙录</b>：数据卡 —— 左侧龙珠显示昨日修为（无提交则静修），连续道行徽章；右侧玉简展示近三十日道行与环比涨幅、三色灵脉进度条（基准 400 修为）；底部为 30 日晴雨表（金点=有提交，昨日点高亮），并按日均提交评定品质（凡品 → 中品 → 上品 → 极品）。
   </p>
   <p align="left">
-    <b>更新机制</b>：<code>.github/workflows/update-profile.yml</code> 定时（每天 08:17 与 16:00 北京时间）或手动触发，用 <code>GITHUB_TOKEN</code> 调 GitHub 官方 GraphQL API 实时采集数据，按 <code>api/</code>（修仙档案/灵宠）、<code>scripts/</code>（横幅/年鉴/记录/灵根/成就/游龙录）中的代码重新渲染全部卡片并提交回仓库 —— 全程只依赖 GitHub 自身，不调用任何第三方平台。<br>
+    <b>更新机制</b>：<code>.github/workflows/update-profile.yml</code> 定时（每天 08:00 / 12:00 / 15:00 / 17:00 / 22:00 北京时间）或手动触发，用 <code>GITHUB_TOKEN</code> 调 GitHub 官方 GraphQL API 实时采集数据，按 <code>api/</code>（修仙档案/灵宠）、<code>scripts/</code>（横幅/年鉴/记录/灵根/成就/游龙录）中的代码重新渲染全部卡片并提交回仓库 —— 全程只依赖 GitHub 自身，不调用任何第三方平台。<br>
     修改卡片样式：编辑 <code>api/</code> 或 <code>scripts/</code> 下的代码（<code>local/</code> 与 workflow 文件本身也在 push 触发范围内）后 push，workflow 会自动拉取最新数据、用新代码重新生成全部卡片；也可在仓库 Actions 页手动点击 <b>Run workflow</b> 立即刷新。<br>
     ⚠ <code>images/</code> 下的 SVG 均为自动生成产物：手动编辑会被下次生成覆盖；且仅改动 <code>README.md</code> 或 <code>images/</code> 不会触发自动更新。<br>
     本地预览：<code>node local/generate.js --mock</code>（合成数据）→ 查看 <code>images/</code> 下的 SVG；或 <code>node local/server.js</code> → <code>http://localhost:8787/preview</code>。

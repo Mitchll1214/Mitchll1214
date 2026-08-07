@@ -48,10 +48,11 @@ for (const [name, svg] of Object.entries(svgs)) {
 
 // ── 4. XML 标签配对校验（防止手写 SVG 漏闭合标签）──
 function checkXml(svg, label) {
+  const cleaned = svg.replace(/<!--[\s\S]*?-->/g, ''); // 剥离注释，注释内的 <img> 等字样不参与校验
   const stack = [];
   const re = /<\/?([a-zA-Z][\w-]*)((?:"[^"]*"|'[^']*'|[^"'>])*?)(\/?)>/g;
   let m;
-  while ((m = re.exec(svg))) {
+  while ((m = re.exec(cleaned))) {
     const [, tag, , selfClose] = m;
     if (selfClose) continue;
     if (tag === '!--') continue;

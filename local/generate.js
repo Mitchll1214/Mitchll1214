@@ -72,47 +72,64 @@ if (mock) {
   }
 }
 
-// ── 2. 渲染 ─────────────────────────────────────────────
+// ── 2. 渲染（每张卡独立 try-catch：单卡失败不阻塞整体，且输出明确错误便于 Actions 诊断）──
 const active = analyzeContributions(days);
 const realmInfo = computeRealm(new Date(user.created_at).getTime());
 const yearTotal = active?.yearTotal ?? gql?.yearTotal ?? 0; // 统一口径：365 天求和，与灵宠/热力图一致
 const streak = active?.streak ?? 0;
 
-const realmSvg = await renderRealm(username, { data: { user, repoStats } });
-const petSvg = await renderPet(username, { days });
-const bannerSvg = renderBanner(['看破红尘善与恶', '只观因果静思安', '因果不虚，静观其变']);
-const statsSvg = renderStats({
-  yearTotal,
-  repos: repoStats?.repos ?? user.public_repos,
-  stars: repoStats?.stars ?? 0,
-  followers: user.followers ?? 0,
-  prs: gql?.prs,
-  issues: gql?.issues,
-});
-const langsSvg = renderLangs(repoStats?.topLangs);
-const graphSvg = renderGraph(days, yearTotal);
-const trophySvg = renderTrophy({
-  streak,
-  stars: repoStats?.stars ?? 0,
-  repos: repoStats?.repos ?? user.public_repos,
-  followers: user.followers ?? 0,
-  starred: gql?.starred,
-  prs: gql?.prs,
-  issues: gql?.issues,
-  years: Math.max(1, Math.floor(realmInfo.years)),
-});
-const snakeSvg = renderSnake(days, yearTotal);
+const out = {};
+const jobs = [
+  ['realm', () => renderRealm(username, { data: { user, repoStats } })],
+  ['pet', () => renderPet(username, { days })],
+  ['banner', () => renderBanner(['看破红尘善与恶', '只观因果静思安', '因果不虚，静观其变'])],
+  ['stats', () => renderStats({
+    yearTotal,
+    repos: repoStats?.repos ?? user.public_repos,
+    stars: repoStats?.stars ?? 0,
+    followers: user.followers ?? 0,
+    prs: gql?.prs,
+    issues: gql?.issues,
+  })],
+  ['langs', () => renderLangs(repoStats?.topLangs)],
+  ['graph', () => renderGraph(days, yearTotal)],
+  ['trophy', () => renderTrophy({
+    streak,
+    stars: repoStats?.stars ?? 0,
+    repos: repoStats?.repos ?? user.public_repos,
+    followers: user.followers ?? 0,
+    starred: gql?.starred,
+    prs: gql?.prs,
+    issues: gql?.issues,
+    years: Math.max(1, Math.floor(realmInfo.years)),
+  })],
+  ['snake', () => renderSnake(days, yearTotal)],
+];
+for (const [name, fn] of jobs) {
+  try {
+    out[name] = await fn();
+    console.log(`✓ 渲染 ${name}`);
+  } catch (err) {
+    console.error(`✗ 渲染 ${name} 失败: ${err.message}`);
+    out[name] = null;
+  }
+}
+const failed = Object.entries(out).filter(([, v]) => v === null);
+if (failed.length) {
+  console.error(`\n⚠ ${failed.length} 张卡渲染失败: ${failed.map(([n]) => n).join(', ')}`);
+  process.exit(1);
+}
 
 // ── 3. 写文件 ───────────────────────────────────────────
 const files = {
-  'images/banner.svg': bannerSvg,
-  'images/realm.svg': realmSvg,
-  'images/pet.svg': petSvg,
-  'images/stats.svg': statsSvg,
-  'images/langs.svg': langsSvg,
-  'images/graph.svg': graphSvg,
-  'images/trophy.svg': trophySvg,
-  'images/snake.svg': snakeSvg,
+  'images/banner.svg': out.banner,
+  'images/realm.svg': out.realm,
+  'images/pet.svg': out.pet,
+  'images/stats.svg': out.stats,
+  'images/langs.svg': out.langs,
+  'images/graph.svg': out.graph,
+  'images/trophy.svg': out.trophy,
+  'images/snake.svg': out.snake,
 };
 mkdirSync('images', { recursive: true });
 for (const [f, svg] of Object.entries(files)) {
