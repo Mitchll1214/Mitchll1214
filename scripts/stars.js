@@ -272,6 +272,10 @@ export function renderTrack(totalCommits, todayCount) {
   // 每 1 次今日提交点亮 1 颗；未提交则 7 颗全暗
   const lit = Math.min(Math.max(todayCount, 0), 7);
   const hasToday = lit > 0;
+  // 标注生成时点（北京时间），便于区分"未更新"与"GitHub 贡献统计延迟"
+  const updatedAt = new Date().toLocaleTimeString('zh-CN', {
+    timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', hour12: false,
+  });
 
   const line = `<polyline points="${DIPPER.map(({ x, y }) => `${x},${y}`).join(' ')}" fill="none" stroke="${hasToday ? 'rgba(255,215,0,0.22)' : 'rgba(190,200,230,0.14)'}" stroke-width="1" stroke-dasharray="1 4" stroke-linecap="round" stroke-linejoin="round"/>`;
 
@@ -294,6 +298,6 @@ ${stars}
 <text x="456" y="80" text-anchor="end" font-size="12" fill="#8fa3d8" letter-spacing="1">今日入道</text>
 
 <!-- 底部状态 -->
-<text x="24" y="196" font-size="11" fill="${hasToday ? '#ffd700' : '#7A7393'}">${hasToday ? `✦ 七星点亮 ${lit}/7` : '✦ 今日未入道 · 七星暗淡'}</text>
+<text x="24" y="196" font-size="11" fill="${hasToday ? '#ffd700' : '#7A7393'}">${hasToday ? `✦ 七星点亮 ${lit}/7` : '✦ 今日未入道 · 七星暗淡'} · 更新于 ${updatedAt}</text>
 `);
 }
