@@ -50,10 +50,19 @@ jobs:
             echo "无数据变化，跳过提交"
           else
             git commit -m "chore: 自动更新修仙档案与灵宠数据"
-            # 若远端有并发提交（如网页端编辑），rebase 后重试，避免更新中断
             if ! git push; then
-              echo "首次推送失败，尝试 rebase 后重试..."
-              git pull --rebase origin main
-              git push
+              echo "首次推送失败（远端有并发提交）→ 基于最新 main 重新生成后再提交"
+              git fetch origin
+              git reset --hard origin/main
+              node local/generate.js Mitchll1214
+              git add images README.md
+              if git diff --cached --quiet; then
+                echo "重新生成后与远端一致，无需提交"
+              else
+                git commit -m "chore: 自动更新修仙档案与灵宠数据"
+                git push
+              fi
             fi
           fi
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
