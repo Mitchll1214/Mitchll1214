@@ -142,16 +142,16 @@
     </g>
 
     <g transform="translate(0, 156)">
-      <text x="0" y="0" font-size="12" fill="#94a3b8">亲密度 · 连续5天</text>
-      <text x="204" y="0" font-size="12" font-weight="700" fill="#38bdf8" text-anchor="end">50%</text>
+      <text x="0" y="0" font-size="12" fill="#94a3b8">亲密度 · 连续6天</text>
+      <text x="204" y="0" font-size="12" font-weight="700" fill="#38bdf8" text-anchor="end">60%</text>
       <rect x="0" y="8" width="204" height="8" rx="4" fill="#0f172a" />
-      <rect x="0" y="8" width="102" height="8" rx="4" fill="url(#dragon-intimacy-grad)" />
+      <rect x="0" y="8" width="122" height="8" rx="4" fill="url(#dragon-intimacy-grad)" />
     </g>
 
     <g transform="translate(0, 200)">
       <rect x="0" y="0" width="204" height="38" rx="8" fill="#06121e" stroke="#1e293b" stroke-width="1" />
       <text x="102" y="23" font-size="11" fill="#cbd5e1" text-anchor="middle">
-        今日 <tspan fill="#34d399" font-weight="bold">26</tspan> 次提交 · 连续 <tspan fill="#38bdf8" font-weight="bold">5</tspan> 天 · 近一年 <tspan fill="#a7f3d0" font-weight="bold">288</tspan> 次
+        今日 <tspan fill="#34d399" font-weight="bold">1</tspan> 次提交 · 连续 <tspan fill="#38bdf8" font-weight="bold">6</tspan> 天 · 近一年 <tspan fill="#a7f3d0" font-weight="bold">296</tspan> 次
       </text>
     </g>
   </g>

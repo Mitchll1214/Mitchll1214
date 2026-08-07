@@ -40,7 +40,7 @@
 </filter>
 
 <!-- 流光裁剪（限制在进度条填充范围内） -->
-<clipPath id="barClip"><rect x="280" y="136" width="118" height="12"/></clipPath>
+<clipPath id="barClip"><rect x="280" y="136" width="127" height="12"/></clipPath>
 
 </defs>
 
@@ -66,12 +66,12 @@
 <circle cx="120" cy="115" r="50" fill="url(#ballGrad)" filter="url(#ballGlow)"/>
 
 <!-- 昨日修为数值 -->
-<text x="120" y="127" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1a1a">5</text>
+<text x="120" y="127" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1a1a">33</text>
      <text x="120" y="146" text-anchor="middle" font-size="10" fill="#5b4308">昨日修为</text>
 
 <!-- 连续道行徽章（streak_days > 0 才显示） -->
 <rect x="68" y="186" width="104" height="22" rx="11" fill="rgba(255,215,0,0.12)" stroke="rgba(255,215,0,0.4)" stroke-width="1"/>
-     <text x="120" y="200" text-anchor="middle" font-size="11" fill="#ffd700">✦ 连续道行 5 日</text>
+     <text x="120" y="200" text-anchor="middle" font-size="11" fill="#ffd700">✦ 连续道行 6 日</text>
 
 <!-- ══ 右侧：灵脉玉简 · 三十日修为 ══ -->
 
@@ -81,27 +81,27 @@
 <text x="735" y="47" text-anchor="middle" font-size="11" fill="#67e8f9">⚡ 灵脉活跃</text>
 
 <!-- 主数值 + 单位 + 涨幅标签 -->
-<text x="280" y="112" font-size="48" font-weight="700" fill="#ffffff">99</text>
-<text x="348" y="112" font-size="16" fill="#94a3b8">修为</text>
-<rect x="408" y="84" width="64" height="26" rx="13" fill="rgba(16,185,129,0.14)" stroke="#34d399" stroke-opacity="0.5" stroke-width="1"/>
-<text x="440" y="101" text-anchor="middle" font-size="13" font-weight="700" fill="#34d399">+313%</text>
+<text x="280" y="112" font-size="48" font-weight="700" fill="#ffffff">107</text>
+<text x="378" y="112" font-size="16" fill="#94a3b8">修为</text>
+<rect x="438" y="84" width="64" height="26" rx="13" fill="rgba(16,185,129,0.14)" stroke="#34d399" stroke-opacity="0.5" stroke-width="1"/>
+<text x="470" y="101" text-anchor="middle" font-size="13" font-weight="700" fill="#34d399">+346%</text>
 
 <!-- 灵脉进度条 -->
 <rect x="280" y="136" width="470" height="12" rx="6" fill="#1f2a3f"/>
-<rect x="280" y="136" width="118" height="12" rx="6" fill="url(#pbarGrad)"/>
+<rect x="280" y="136" width="127" height="12" rx="6" fill="url(#pbarGrad)"/>
 
 <!-- 动态流光（translateX 驱动，clip 限制在填充条内） -->
 <g clip-path="url(#barClip)">
   <rect x="280" y="136" width="46" height="12" fill="url(#flowGrad)" opacity="0.6">
-    <animateTransform attributeName="transform" type="translate" from="0" to="118" dur="3s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="translate" from="0" to="127" dur="3s" repeatCount="indefinite"/>
   </rect>
 </g>
 
 <!-- 终点龙珠（脉动发光） -->
-<circle cx="398" cy="142" r="15" fill="rgba(255,215,0,0.2)">
+<circle cx="407" cy="142" r="15" fill="rgba(255,215,0,0.2)">
   <animate attributeName="r" values="10;16;10" dur="2.4s" repeatCount="indefinite"/>
 </circle>
-<circle cx="398" cy="142" r="9" fill="#ffd700">
+<circle cx="407" cy="142" r="9" fill="#ffd700">
   <animate attributeName="opacity" values="1;0.7;1" dur="2.4s" repeatCount="indefinite"/>
 </circle>
 
@@ -111,7 +111,7 @@
 <text x="737" y="180" text-anchor="middle" font-size="12" fill="#ffd700">品质 · 上品</text>
 
 <!-- ══ 底部：30 日晴雨表 ══ -->
-<circle cx="40" cy="222" r="4" fill="#2a3650"/><circle cx="64" cy="222" r="4" fill="#ffd700"/><circle cx="88" cy="222" r="4" fill="#ffd700"/><circle cx="112" cy="222" r="4" fill="#2a3650"/><circle cx="136" cy="222" r="4" fill="#ffd700"/><circle cx="160" cy="222" r="4" fill="#ffd700"/><circle cx="184" cy="222" r="4" fill="#ffd700"/><circle cx="208" cy="222" r="4" fill="#2a3650"/><circle cx="232" cy="222" r="4" fill="#2a3650"/><circle cx="256" cy="222" r="4" fill="#ffd700"/><circle cx="280" cy="222" r="4" fill="#2a3650"/><circle cx="304" cy="222" r="4" fill="#2a3650"/><circle cx="328" cy="222" r="4" fill="#2a3650"/><circle cx="352" cy="222" r="4" fill="#2a3650"/><circle cx="376" cy="222" r="4" fill="#2a3650"/><circle cx="400" cy="222" r="4" fill="#ffd700"/><circle cx="424" cy="222" r="4" fill="#ffd700"/><circle cx="448" cy="222" r="4" fill="#2a3650"/><circle cx="472" cy="222" r="4" fill="#2a3650"/><circle cx="496" cy="222" r="4" fill="#2a3650"/><circle cx="520" cy="222" r="4" fill="#ffd700"/><circle cx="544" cy="222" r="4" fill="#ffd700"/><circle cx="568" cy="222" r="4" fill="#ffd700"/><circle cx="592" cy="222" r="4" fill="#2a3650"/><circle cx="616" cy="222" r="4" fill="#2a3650"/><circle cx="640" cy="222" r="4" fill="#ffd700"/><circle cx="664" cy="222" r="4" fill="#ffd700"/><circle cx="688" cy="222" r="4" fill="#ffd700"/><circle cx="712" cy="222" r="5.5" fill="#ffd700" stroke="#ffffff" stroke-width="1.5"/><circle cx="736" cy="222" r="4" fill="#ffd700"/>
+<circle cx="40" cy="222" r="4" fill="#ffd700"/><circle cx="64" cy="222" r="4" fill="#ffd700"/><circle cx="88" cy="222" r="4" fill="#2a3650"/><circle cx="112" cy="222" r="4" fill="#ffd700"/><circle cx="136" cy="222" r="4" fill="#ffd700"/><circle cx="160" cy="222" r="4" fill="#ffd700"/><circle cx="184" cy="222" r="4" fill="#2a3650"/><circle cx="208" cy="222" r="4" fill="#2a3650"/><circle cx="232" cy="222" r="4" fill="#ffd700"/><circle cx="256" cy="222" r="4" fill="#2a3650"/><circle cx="280" cy="222" r="4" fill="#2a3650"/><circle cx="304" cy="222" r="4" fill="#2a3650"/><circle cx="328" cy="222" r="4" fill="#2a3650"/><circle cx="352" cy="222" r="4" fill="#2a3650"/><circle cx="376" cy="222" r="4" fill="#ffd700"/><circle cx="400" cy="222" r="4" fill="#ffd700"/><circle cx="424" cy="222" r="4" fill="#2a3650"/><circle cx="448" cy="222" r="4" fill="#2a3650"/><circle cx="472" cy="222" r="4" fill="#2a3650"/><circle cx="496" cy="222" r="4" fill="#ffd700"/><circle cx="520" cy="222" r="4" fill="#ffd700"/><circle cx="544" cy="222" r="4" fill="#ffd700"/><circle cx="568" cy="222" r="4" fill="#2a3650"/><circle cx="592" cy="222" r="4" fill="#2a3650"/><circle cx="616" cy="222" r="4" fill="#ffd700"/><circle cx="640" cy="222" r="4" fill="#ffd700"/><circle cx="664" cy="222" r="4" fill="#ffd700"/><circle cx="688" cy="222" r="4" fill="#ffd700"/><circle cx="712" cy="222" r="5.5" fill="#ffd700" stroke="#ffffff" stroke-width="1.5"/><circle cx="736" cy="222" r="4" fill="#ffd700"/>
 <text x="752" y="226" font-size="10" fill="#94a3b8">昨日</text>
 
 </svg>
