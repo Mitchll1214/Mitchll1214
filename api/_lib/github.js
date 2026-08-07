@@ -52,9 +52,9 @@ export async function getGraphQLData(username, token) {
           weeks { contributionDays { date contributionCount } }
         }
       }
-      repositories(first: 100, orderBy: {field: UPDATED_AT, direction: DESC}) {
+      repositories(first: 100, ownerAffiliations: OWNER, isFork: false, orderBy: {field: UPDATED_AT, direction: DESC}) {
         totalCount
-        nodes { stargazerCount primaryLanguage { name } }
+        nodes { stargazerCount primaryLanguage { name } defaultBranchRef { target { ... on Commit { history { totalCount } } } } }
       }
       followers { totalCount }
       pullRequests { totalCount }
@@ -84,9 +84,11 @@ export async function getGraphQLData(username, token) {
   }
   const langs = new Map();
   let stars = 0;
+  let totalCommits = 0;
   for (const r of u.repositories.nodes || []) {
     stars += r.stargazerCount || 0;
     if (r.primaryLanguage?.name) langs.set(r.primaryLanguage.name, (langs.get(r.primaryLanguage.name) || 0) + 1);
+    totalCommits += r.defaultBranchRef?.target?.history?.totalCount || 0;
   }
   const topLangs = [...langs.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
 
@@ -96,6 +98,7 @@ export async function getGraphQLData(username, token) {
     avatarUrl: u.avatarUrl,
     days,
     yearTotal: u.contributionsCollection.contributionCalendar.totalContributions,
+    totalCommits, // 历史累计提交数（自有仓库 default 分支提交数之和，不含 fork）
     createdAt: u.createdAt,
     repos: u.repositories.totalCount,
     stars,

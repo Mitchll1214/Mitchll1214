@@ -11,6 +11,7 @@ import { renderPet } from '../api/pet.js';
 import { analyzeContributions } from '../api/_lib/pet.js';
 import { computeRealm } from '../api/_lib/realm.js';
 import { renderBanner, renderStats, renderLangs, renderGraph, renderTrophy, renderSnake } from '../scripts/cards.js';
+import { renderStarMap, renderTrack } from '../scripts/stars.js';
 
 const username = (process.argv[2] || 'Mitchll1214').replace(/^--mock$/, 'Mitchll1214');
 const mock = process.argv.includes('--mock');
@@ -103,7 +104,8 @@ const jobs = [
     issues: gql?.issues,
     years: Math.max(1, Math.floor(realmInfo.years)),
   })],
-  ['snake', () => renderSnake(days, yearTotal)],
+  ['stars', () => renderStarMap(gql?.totalCommits ?? active?.yearTotal ?? 0)],
+  ['track', () => renderTrack(gql?.totalCommits ?? active?.yearTotal ?? 0, active?.todayCount ?? 0)],
 ];
 for (const [name, fn] of jobs) {
   try {
@@ -129,7 +131,8 @@ const files = {
   'images/langs.svg': out.langs,
   'images/graph.svg': out.graph,
   'images/trophy.svg': out.trophy,
-  'images/snake.svg': out.snake,
+  'images/stars.svg': out.stars,
+  'images/track.svg': out.track,
 };
 mkdirSync('images', { recursive: true });
 for (const [f, svg] of Object.entries(files)) {
