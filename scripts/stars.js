@@ -71,6 +71,10 @@ function arcPoint(i, n) {
 // ══ SVG 模板区 ══
 
 function svgShell(title, sub, body) {
+  // 装饰性背景微星（固定种子，纯氛围，与数据星区分）
+  const bgStars = starPoints(26, 777, 18, 200)
+    .map((p) => `<circle cx="${p.x}" cy="${p.y}" r="${Math.max(0.6, (p.r * 0.5).toFixed(1))}" fill="#8fa3d8" opacity="0.10"/>`)
+    .join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
  width="480"
  height="210"
@@ -86,9 +90,26 @@ function svgShell(title, sub, body) {
   <stop offset="100%" stop-color="#05070D"/>
 </radialGradient>
 
+<!-- 星云光晕（氛围） -->
+<radialGradient id="nebula1" cx="50%" cy="50%" r="50%">
+  <stop offset="0%" stop-color="#6366f1" stop-opacity="0.20"/>
+  <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="nebula2" cx="50%" cy="50%" r="50%">
+  <stop offset="0%" stop-color="#a855f7" stop-opacity="0.13"/>
+  <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+</radialGradient>
+
 </defs>
 
 <rect x="1" y="1" width="478" height="208" rx="16" fill="url(#space)" stroke="rgba(142,140,216,0.25)" stroke-width="1.5"/>
+
+<!-- 星云光晕层 -->
+<circle cx="370" cy="58" r="170" fill="url(#nebula1)"/>
+<circle cx="70" cy="180" r="140" fill="url(#nebula2)"/>
+
+<!-- 背景微星 -->
+${bgStars}
 
 <!-- 标题 -->
 <text x="24" y="32" font-size="15" font-weight="700" fill="#E6E1F5" letter-spacing="1">${title}</text>
@@ -105,6 +126,21 @@ export function renderStarMap(totalCommits) {
   const pts = starPoints(st.stars);
   const stars = pts.map((p) => starSvg(p, { twinkle: true })).join('');
 
+  // 银河：星河初成（≥200 次）及以上时，在星辰密集区画一条半透明渐变曲线模拟银河
+  const galaxy = totalCommits >= 200
+    ? `<defs>
+  <linearGradient id="galaxy" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+    <stop offset="0.35" stop-color="#c7d2fe" stop-opacity="0.55"/>
+    <stop offset="0.65" stop-color="#fcd34d" stop-opacity="0.35"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <filter id="galaxyBlur" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<path d="M18 188 C 120 128, 205 170, 305 102 C 362 66, 425 122, 478 84" fill="none" stroke="url(#galaxy)" stroke-width="24" opacity="0.6" filter="url(#galaxyBlur)"/>
+<path d="M18 188 C 120 128, 205 170, 305 102 C 362 66, 425 122, 478 84" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.6"/>`
+    : '';
+
   return svgShell('✨ 星图推衍 · 以行铸辰', 'HISTORY', `
 <!-- 等级徽章 -->
 <rect x="382" y="18" width="76" height="22" rx="11" fill="rgba(255,215,0,0.14)" stroke="rgba(255,215,0,0.45)" stroke-width="1"/>
@@ -114,6 +150,9 @@ export function renderStarMap(totalCommits) {
 <text x="24" y="76" font-size="34" font-weight="800" fill="#ffffff">${totalCommits}</text>
 <text x="${24 + String(totalCommits).length * 21 + 10}" y="76" font-size="14" fill="#94a3b8">次行迹 · 以行铸辰</text>
 
+<!-- 银河（星河初成及以上） -->
+${galaxy}
+
 <!-- 星图 -->
 ${stars}
 
@@ -122,47 +161,49 @@ ${stars}
 `);
 }
 
-/** 卡二：今日星轨 · 勤修不辍（今日提交数 → 今日星辰沿弧线缀入星图） */
+/** 卡二：今日星轨 · 勤修不辍（今日提交数 → 北斗七星逐颗点亮） */
 export function renderTrack(totalCommits, todayCount) {
   // 基础星图：沿用累计星图的同一片星辰（低透明度表示"已有"）
   const base = starPoints(starStageOf(totalCommits).stars);
   const baseSvg = base.map((p) => starSvg(p, { dim: true })).join('');
 
-  const n = Math.min(Math.max(todayCount, 0), 14);
-  const hasToday = todayCount > 0;
+  // 北斗七星（天枢 → 天璇 → 天玑 → 天权 → 玉衡 → 开阳 → 摇光）
+  const DIPPER = [
+    [150, 140], [175, 118], [205, 110], [232, 118],
+    [252, 138], [272, 155], [296, 170],
+  ];
+  // 每 1 次今日提交点亮 1 颗星；今日未提交则 7 颗全暗
+  const lit = Math.min(Math.max(todayCount, 0), 7);
+  const hasToday = lit > 0;
 
-  // 今日星轨弧线（象征"轨迹"）
-  const arcPath = 'M50 176 C 240 44, 240 44, 440 132';
-  const trackLine = `<path d="${arcPath}" fill="none" stroke="rgba(255,215,0,0.35)" stroke-width="1.2" stroke-dasharray="3 6"/>`;
+  const line = `<polyline points="${DIPPER.map(([x, y]) => `${x},${y}`).join(' ')}" fill="none" stroke="${hasToday ? 'rgba(255,215,0,0.4)' : 'rgba(255,255,255,0.16)'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
 
-  // 今日新增：高亮金色大星（6px 发光），沿弧线排布
-  const todayStars = hasToday
-    ? Array.from({ length: n }, (_, i) => {
-        const [x, y] = arcPoint(i, n);
-        return `<g>
+  const stars = DIPPER
+    .map(([x, y], i) => (i < lit
+      ? `<g>
   <circle cx="${x}" cy="${y}" r="11" fill="rgba(255,215,0,0.20)"/>
   <circle cx="${x}" cy="${y}" r="6" fill="#ffd700">
     <animate attributeName="opacity" values="1;0.55;1" dur="1.8s" repeatCount="indefinite"/>
   </circle>
-</g>`;
-      }).join('')
-    : `<circle cx="240" cy="128" r="5" fill="#4a5568" opacity="0.55"/>`;
+</g>`
+      : `<circle cx="${x}" cy="${y}" r="6" fill="#334155" opacity="0.55"/>`))
+    .join('');
 
   return svgShell('🌠 今日星轨 · 勤修不辍', 'TODAY', `
 <!-- 基础星图（已有星辰，低透明度） -->
 ${baseSvg}
 
-<!-- 今日轨迹弧线 -->
-${trackLine}
+<!-- 北斗七星连线 -->
+${line}
 
-<!-- 今日星辰 -->
-${todayStars}
+<!-- 北斗七星（每 1 次今日提交点亮 1 颗） -->
+${stars}
 
 <!-- 今日数值 -->
-<text x="24" y="76" font-size="34" font-weight="800" fill="#ffffff">${hasToday ? todayCount : 0}</text>
-<text x="${24 + String(hasToday ? todayCount : 0).length * 21 + 10}" y="76" font-size="14" fill="#94a3b8">${hasToday ? '次入道 · 勤修不辍' : '今日未入道'}</text>
+<text x="456" y="66" text-anchor="end" font-size="30" font-weight="800" fill="#ffffff">${todayCount}</text>
+<text x="456" y="84" text-anchor="end" font-size="12" fill="#94a3b8">今日入道</text>
 
 <!-- 底部状态 -->
-<text x="24" y="196" font-size="11" fill="${hasToday ? '#ffd700' : '#7A7393'}">${hasToday ? '✦ 今日星辰已缀入星轨' : '✦ 星轨沉寂，明日再续'}</text>
+<text x="24" y="196" font-size="11" fill="${hasToday ? '#ffd700' : '#7A7393'}">${hasToday ? `✦ 七星点亮 ${lit}/7` : '✦ 今日未入道 · 七星暗淡'}</text>
 `);
 }
