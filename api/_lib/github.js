@@ -42,6 +42,7 @@ export async function getRepos(username) {
 export async function getGraphQLData(username, token) {
   const query = `query($login: String!) {
     user(login: $login) {
+      id
       login
       name
       avatarUrl
@@ -52,9 +53,9 @@ export async function getGraphQLData(username, token) {
           weeks { contributionDays { date contributionCount } }
         }
       }
-      repositories(first: 100, ownerAffiliations: OWNER, isFork: false, orderBy: {field: UPDATED_AT, direction: DESC}) {
+      repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: UPDATED_AT, direction: DESC}) {
         totalCount
-        nodes { stargazerCount primaryLanguage { name } defaultBranchRef { target { ... on Commit { history { totalCount } } } } }
+        nodes { isFork stargazerCount primaryLanguage { name } defaultBranchRef { target { ... on Commit { history { totalCount } } } } }
       }
       followers { totalCount }
       pullRequests { totalCount }
@@ -84,11 +85,53 @@ export async function getGraphQLData(username, token) {
   }
   const langs = new Map();
   let stars = 0;
+  // 历史累计提交：仅统计用户本人（author）提交，排除自动化脚本（bot）；
+  // 需要用户 id 做 author 过滤，故二次查询
   let totalCommits = 0;
+  let authorTotalOk = false;
+  try {
+    const uid = u.id;
+    const res2 = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        'User-Agent': 'xianxia-profile/1.0',
+      },
+      body: JSON.stringify({
+        query: `query($login: String!, $uid: ID!) {
+  user(login: $login) {
+    repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: UPDATED_AT, direction: DESC}) {
+      nodes { defaultBranchRef { target { ... on Commit { history(author: { id: $uid }) { totalCount } } } } }
+    }
+  }
+}`,
+        variables: { login: username, uid },
+      }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (res2.ok) {
+      const j2 = await res2.json();
+      if (!j2.errors) {
+        for (const r of j2.data?.user?.repositories?.nodes || []) {
+          totalCommits += r.defaultBranchRef?.target?.history?.totalCount || 0;
+        }
+        authorTotalOk = true;
+      }
+    }
+  } catch { /* 走降级 */ }
+
+  // stars/语言只统计非 fork 仓库（避免 fork 继承上游的 star/语言污染灵根）
   for (const r of u.repositories.nodes || []) {
+    if (r.isFork) continue;
     stars += r.stargazerCount || 0;
     if (r.primaryLanguage?.name) langs.set(r.primaryLanguage.name, (langs.get(r.primaryLanguage.name) || 0) + 1);
-    totalCommits += r.defaultBranchRef?.target?.history?.totalCount || 0;
+  }
+  // 降级：author 过滤查询失败时，退回主查询的总数（含 bot，仅兜底，Actions 正常走 author 过滤）
+  if (!authorTotalOk) {
+    for (const r of u.repositories.nodes || []) {
+      totalCommits += r.defaultBranchRef?.target?.history?.totalCount || 0;
+    }
   }
   const topLangs = [...langs.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
 
