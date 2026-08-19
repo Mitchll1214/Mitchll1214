@@ -62,7 +62,7 @@
 
 <!-- 历史累计数值 -->
 <text x="24" y="50" font-size="10" fill="#7A7393" letter-spacing="2">历 史 累 计</text>
-<text x="24" y="86" font-size="36" font-weight="800" fill="#ffffff">357</text>
+<text x="24" y="86" font-size="36" font-weight="800" fill="#ffffff">358</text>
 <text x="100" y="86" font-size="13" fill="#94a3b8">次行迹</text>
 
 <!-- 银河（星河初成及以上） -->

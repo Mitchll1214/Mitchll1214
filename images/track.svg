@@ -86,17 +86,11 @@
   </circle>
   <path d="M176 109.0 L176 129.0 M166.0 119 L186.0 119" stroke="#fff7d6" stroke-opacity="0.85" stroke-width="0.9"/>
 </g><g>
-  <circle cx="208" cy="111" r="13.4" fill="url(#haloGrad)"/>
-  <circle cx="208" cy="111" r="5.4" fill="url(#coreGrad)">
-    <animate attributeName="opacity" values="1;0.72;1" dur="2.2s" repeatCount="indefinite"/>
-  </circle>
-  <path d="M208 101.6 L208 120.4 M198.6 111 L217.4 111" stroke="#fff7d6" stroke-opacity="0.85" stroke-width="0.9"/>
+  <circle cx="208" cy="111" r="3.3" fill="#3d4d72" opacity="0.9"/>
+  <circle cx="208" cy="111" r="1.8" fill="#8fa3d8" opacity="0.55"/>
 </g><g>
-  <circle cx="236" cy="121" r="12.0" fill="url(#haloGrad)"/>
-  <circle cx="236" cy="121" r="4" fill="url(#coreGrad)">
-    <animate attributeName="opacity" values="1;0.72;1" dur="2.2s" repeatCount="indefinite"/>
-  </circle>
-  <path d="M236 113.0 L236 129.0 M228.0 121 L244.0 121" stroke="#fff7d6" stroke-opacity="0.85" stroke-width="0.9"/>
+  <circle cx="236" cy="121" r="2.5" fill="#3d4d72" opacity="0.9"/>
+  <circle cx="236" cy="121" r="1.4" fill="#8fa3d8" opacity="0.55"/>
 </g><g>
   <circle cx="253" cy="142" r="4.0" fill="#3d4d72" opacity="0.9"/>
   <circle cx="253" cy="142" r="2.2" fill="#8fa3d8" opacity="0.55"/>
@@ -109,11 +103,11 @@
 </g>
 
 <!-- 今日数值 -->
-<text x="456" y="60" text-anchor="end" font-size="36" font-weight="800" fill="#ffffff">4</text>
+<text x="456" y="60" text-anchor="end" font-size="36" font-weight="800" fill="#ffffff">2</text>
 <text x="456" y="80" text-anchor="end" font-size="12" fill="#8fa3d8" letter-spacing="1">今日入道</text>
 
 <!-- 底部状态 -->
-<text x="24" y="196" font-size="11" fill="#ffd700">✦ 七星点亮 4/7 · 更新于 17:19</text>
+<text x="24" y="196" font-size="11" fill="#ffd700">✦ 七星点亮 2/7 · 更新于 22:39</text>
 
 
 </svg>
