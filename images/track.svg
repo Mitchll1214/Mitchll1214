@@ -70,15 +70,12 @@
 </g><circle cx="88.65724756848067" cy="180.33156881853938" r="1.9730156899662687" fill="#dfe8ff" opacity="0.2066222566170618"></circle>
 
 <!-- 北斗连线（极淡） -->
-<polyline points="148,144 176,119 208,111 236,121 253,142 274,157 299,173" fill="none" stroke="rgba(255,215,0,0.22)" stroke-width="1" stroke-dasharray="1 4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="148,144 176,119 208,111 236,121 253,142 274,157 299,173" fill="none" stroke="rgba(190,200,230,0.14)" stroke-width="1" stroke-dasharray="1 4" stroke-linecap="round" stroke-linejoin="round"/>
 
 <!-- 北斗七星 -->
 <g>
-  <circle cx="148" cy="144" r="14.8" fill="url(#haloGrad)"/>
-  <circle cx="148" cy="144" r="6.8" fill="url(#coreGrad)">
-    <animate attributeName="opacity" values="1;0.72;1" dur="2.2s" repeatCount="indefinite"/>
-  </circle>
-  <path d="M148 133.2 L148 154.8 M137.2 144 L158.8 144" stroke="#fff7d6" stroke-opacity="0.85" stroke-width="0.9"/>
+  <circle cx="148" cy="144" r="4.2" fill="#3d4d72" opacity="0.9"/>
+  <circle cx="148" cy="144" r="2.3" fill="#8fa3d8" opacity="0.55"/>
 </g><g>
   <circle cx="176" cy="119" r="3.7" fill="#3d4d72" opacity="0.9"/>
   <circle cx="176" cy="119" r="2.0" fill="#8fa3d8" opacity="0.55"/>
@@ -100,11 +97,11 @@
 </g>
 
 <!-- 今日数值 -->
-<text x="456" y="60" text-anchor="end" font-size="36" font-weight="800" fill="#ffffff">1</text>
+<text x="456" y="60" text-anchor="end" font-size="36" font-weight="800" fill="#ffffff">0</text>
 <text x="456" y="80" text-anchor="end" font-size="12" fill="#8fa3d8" letter-spacing="1">今日入道</text>
 
 <!-- 底部状态 -->
-<text x="24" y="196" font-size="11" fill="#ffd700">✦ 七星点亮 1/7 · 更新于 01:44</text>
+<text x="24" y="196" font-size="11" fill="#7A7393">✦ 今日未入道 · 七星暗淡 · 更新于 09:47</text>
 
 
 </svg>
