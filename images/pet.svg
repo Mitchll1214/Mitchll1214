@@ -136,9 +136,9 @@
 
     <g transform="translate(0, 114)">
       <text x="0" y="0" font-size="12" fill="#94a3b8">灵力 · 近30日</text>
-      <text x="204" y="0" font-size="12" font-weight="700" fill="#34d399" text-anchor="end">87%</text>
+      <text x="204" y="0" font-size="12" font-weight="700" fill="#34d399" text-anchor="end">67%</text>
       <rect x="0" y="8" width="204" height="8" rx="4" fill="#0f172a" />
-      <rect x="0" y="8" width="177" height="8" rx="4" fill="url(#dragon-mana-grad)" />
+      <rect x="0" y="8" width="137" height="8" rx="4" fill="url(#dragon-mana-grad)" />
     </g>
 
     <g transform="translate(0, 156)">
