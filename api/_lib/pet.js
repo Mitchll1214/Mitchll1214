@@ -1,44 +1,40 @@
 // 灵宠系统：活跃度驱动的 Q 版仙狐「小九」。
 // 成长阶段 ← 近一年贡献总数；心情/灵力 ← 今日与近 30 日活跃；亲密度 ← 最长连续贡献。
+import { todayStr, dateStrOffset } from './tz.js';
 
 const DAY = 86400e3;
-const fmt = (d) => d.toISOString().slice(0, 10);
 
-/** 贡献数组 → 今日、近30日、连续天数、近一年总数、最近活跃距今天数 */
+/** 贡献数组 → 今日、近30日、连续天数、近一年总数、最近活跃距今天数（北京时间） */
 export function analyzeContributions(list) {
   if (!list || !list.length) return null;
   const map = new Map(list.map((c) => [c.date, c.count]));
-  const today = new Date();
-  const todayKey = fmt(today);
+  // 使用北京时间统一的"今天"定义
+  const todayKey = todayStr();
 
   let last30 = 0;
   for (let i = 0; i < 30; i++) {
-    const d = new Date(today.getTime() - i * DAY);
-    last30 += map.get(fmt(d)) || 0;
+    last30 += map.get(dateStrOffset(i)) || 0;
   }
 
   let yearTotal = 0;
   for (let i = 0; i < 365; i++) {
-    const d = new Date(today.getTime() - i * DAY);
-    yearTotal += map.get(fmt(d)) || 0;
+    yearTotal += map.get(dateStrOffset(i)) || 0;
   }
 
   const todayCount = map.get(todayKey) || 0;
 
   // 连续贡献天数（从今天起；今天没贡献则从昨天起算）
   let streak = 0;
-  let cursor = new Date(today);
-  if (!todayCount) cursor.setDate(cursor.getDate() - 1);
-  while ((map.get(fmt(cursor)) || 0) > 0) {
-    streak++;
-    cursor.setDate(cursor.getDate() - 1);
-    if (streak > 3650) break;
+  let startOffset = todayCount > 0 ? 0 : 1;
+  for (let i = startOffset; i < 366; i++) {
+    if ((map.get(dateStrOffset(i)) || 0) > 0) streak++;
+    else break;
   }
 
   // 最近一次贡献距今几天
   let daysIdle = 0;
   for (let i = 0; i < 366; i++) {
-    if (map.get(fmt(new Date(today.getTime() - i * DAY)))) { daysIdle = i; break; }
+    if (map.get(dateStrOffset(i))) { daysIdle = i; break; }
   }
 
   return { todayCount, last30, streak, yearTotal, daysIdle };

@@ -12,6 +12,7 @@ import { analyzeContributions } from '../api/_lib/pet.js';
 import { computeRealm } from '../api/_lib/realm.js';
 import { renderBanner, renderStats, renderLangs, renderGraph, renderTrophy, renderSnake } from '../scripts/cards.js';
 import { renderStarMap, renderTrack } from '../scripts/stars.js';
+import { dateStrOffset } from '../api/_lib/tz.js';
 
 const username = (process.argv[2] || 'Mitchll1214').replace(/^--mock$/, 'Mitchll1214');
 const mock = process.argv.includes('--mock');
@@ -33,13 +34,14 @@ let user, repoStats;
 
 if (mock) {
   // ── 合成演示数据（仅本地预览）──
-  const now = new Date();
   days = [];
   for (let i = 364; i >= 0; i--) {
-    const d = new Date(now.getTime() - i * 86400e3);
+    // 使用北京时间统一的日期工具
+    const dateStr = dateStrOffset(i);
+    const d = new Date(dateStr + 'T00:00:00Z');
     const dow = d.getUTCDay();
     const count = dow === 0 || dow === 6 ? (i % 3 === 0 ? 2 : 0) : 1 + ((i * 7) % 5);
-    days.push({ date: d.toISOString().slice(0, 10), count: i < 3 ? 1 : count });
+    days.push({ date: dateStr, count: i < 3 ? 1 : count });
   }
   user = {
     name: 'Mitchll', login: username,

@@ -1,6 +1,7 @@
 // 自建卡片渲染：统计卡 / 语言卡 / 贡献热力图 / 成就奖杯 / 道号横幅(滚动字幕) / 天道灵脉游龙录(动画)。
 // 全部为纯静态 SVG + SMIL/CSS 动画，可被 GitHub 直接渲染，零第三方服务。
 import { svgWrap, text, esc, star } from '../api/_lib/svg.js';
+import { dateStrOffset, todayStr } from '../api/_lib/tz.js';
 
 export const LANG_COLORS = {
   Python: '#3572A5', JavaScript: '#F1E05A', TypeScript: '#3178C6', Vue: '#41B883',
@@ -153,15 +154,19 @@ export function renderGraph(days, yearTotal) {
   const Y0 = 52;
   const maxCount = Math.max(1, ...days.map((d) => d.count));
   const map = new Map(days.map((d) => [d.date, d.count]));
-  // 从今天往前推一年，按周日开始排周
-  const today = new Date();
-  const end = new Date(today.getTime() + (6 - today.getUTCDay()) * 86400e3); // 本周日
+  
+  // 使用北京时间计算日期范围
+  const todayBJ = todayStr();
+  const todayDate = new Date(todayBJ + 'T00:00:00Z');
+  const end = new Date(todayDate.getTime() + (6 - todayDate.getUTCDay()) * 86400e3); // 本周日
   const start = new Date(end.getTime() - 363 * 86400e3); // 约 52 周
+  
   const weeks = [];
   for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
     const key = d.toISOString().slice(0, 10);
     weeks.push({ date: key, count: map.get(key) || 0 });
   }
+  
   const cols = [];
   for (let i = 0; i < weeks.length; i += 7) cols.push(weeks.slice(i, i + 7));
   const cellsSvg = cols
@@ -226,11 +231,9 @@ export function renderTrophy(data) {
 
 /** 天道灵脉 · 游龙录 —— 数据计算（近30日/昨日/连续/上月/品质/进度/状态/涨幅） */
 export function computeSpiritStats(days) {
-  const DAY = 86400e3;
-  const fmt = (d) => d.toISOString().slice(0, 10);
   const map = new Map((days || []).map((d) => [d.date, d.count]));
-  const today = new Date();
-  const get = (offset) => map.get(fmt(new Date(today.getTime() - offset * DAY))) || 0;
+  // 使用北京时间统一的日期工具（已在顶部 import）
+  const get = (offset) => map.get(dateStrOffset(offset)) || 0;
 
   // 近 30 天逐日提交（索引 0 = 29 天前 … 索引 28 = 昨日，索引 29 = 今日）
   const daily_commits = [];
