@@ -5,7 +5,7 @@
 // 在 GitHub Actions 中运行时自动使用 GITHUB_TOKEN（GraphQL 数据源，GitHub 官方）；
 // 本地无 token 时降级为匿名 REST + github.com 贡献页（均属 GitHub 官方）。
 import { writeFileSync, mkdirSync } from 'node:fs';
-import { getToken, getGraphQLData, getUser, getRepos, getContributions } from '../api/_lib/github.js';
+import { getToken, hasProfileToken, getGraphQLData, getUser, getRepos, getContributions, getRecentCommitDays } from '../api/_lib/github.js';
 import { renderRealm } from '../api/realm.js';
 import { renderPet } from '../api/pet.js';
 import { analyzeContributions } from '../api/_lib/pet.js';
@@ -75,16 +75,30 @@ if (mock) {
   }
 }
 
+// ── 1.5 精确提交统计（按北京自然日，覆盖 token 有权访问的私有库）──
+// GitHub 贡献日历按 UTC 分日，且夹杂 issue/PR/review；"今日提交/连续天数"必须用精确值。
+let preciseDays = null;
+if (!mock && token) {
+  try {
+    preciseDays = await getRecentCommitDays(username, token, { daysBack: 90 });
+    console.log(`✓ 精确提交统计（北京自然日，近 90 天）${hasProfileToken() ? ' · 含私有库' : ' · 仅公开/可访问仓库'}`);
+  } catch (e) {
+    console.warn(`⚠ 精确提交统计失败，回退贡献日历（UTC 分日）：${e.message}`);
+  }
+}
+
 // ── 2. 渲染（每张卡独立 try-catch：单卡失败不阻塞整体，且输出明确错误便于 Actions 诊断）──
-const active = analyzeContributions(days);
+const active = analyzeContributions(days, { preciseDays });
 const realmInfo = computeRealm(new Date(user.created_at).getTime());
-const yearTotal = active?.yearTotal ?? gql?.yearTotal ?? 0; // 统一口径：365 天求和，与灵宠/热力图一致
+const yearTotal = active?.yearTotal ?? gql?.yearTotal ?? 0; // 日历整年求和，与热力图一致
 const streak = active?.streak ?? 0;
+// 历史累计：0 不能当作"有效值"（GraphQL 二次查询失败时会返回 0）
+const historicalTotal = (gql?.totalCommits ?? 0) > 0 ? gql.totalCommits : (active?.yearTotal ?? 0);
 
 const out = {};
 const jobs = [
   ['realm', () => renderRealm(username, { data: { user, repoStats } })],
-  ['pet', () => renderPet(username, { days })],
+  ['pet', () => renderPet(username, { days, preciseDays })],
   ['banner', () => renderBanner(['看破红尘善与恶', '只观因果静思安', '因果不虚，静观其变'])],
   ['stats', () => renderStats({
     yearTotal,
@@ -106,8 +120,8 @@ const jobs = [
     issues: gql?.issues,
     years: Math.max(1, Math.floor(realmInfo.years)),
   })],
-  ['stars', () => renderStarMap(gql?.totalCommits ?? active?.yearTotal ?? 0)],
-  ['track', () => renderTrack(gql?.totalCommits ?? active?.yearTotal ?? 0, active?.todayCount ?? 0)],
+  ['stars', () => renderStarMap(historicalTotal)],
+  ['track', () => renderTrack(historicalTotal, active?.todayCount ?? 0)],
 ];
 for (const [name, fn] of jobs) {
   try {

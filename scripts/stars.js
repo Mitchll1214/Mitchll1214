@@ -3,6 +3,7 @@
 //   - 历史累计提交数 totalCommits → 星图推衍等级 / 银河
 //   - 今日提交数 todayCount → 今日星轨（北斗七星逐颗点亮）
 // 全部为纯静态 SVG + SMIL 动画，零第三方依赖。
+import { timeStrBJ } from '../api/_lib/tz.js';
 
 // ══ 数据计算区 ══
 
@@ -273,9 +274,7 @@ export function renderTrack(totalCommits, todayCount) {
   const lit = Math.min(Math.max(todayCount, 0), 7);
   const hasToday = lit > 0;
   // 标注生成时点（北京时间），便于区分"未更新"与"GitHub 贡献统计延迟"
-  const updatedAt = new Date().toLocaleTimeString('zh-CN', {
-    timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', hour12: false,
-  });
+  const updatedAt = timeStrBJ();
 
   const line = `<polyline points="${DIPPER.map(({ x, y }) => `${x},${y}`).join(' ')}" fill="none" stroke="${hasToday ? 'rgba(255,215,0,0.22)' : 'rgba(190,200,230,0.14)'}" stroke-width="1" stroke-dasharray="1 4" stroke-linecap="round" stroke-linejoin="round"/>`;
 

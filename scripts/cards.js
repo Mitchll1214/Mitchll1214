@@ -1,7 +1,7 @@
 // 自建卡片渲染：统计卡 / 语言卡 / 贡献热力图 / 成就奖杯 / 道号横幅(滚动字幕) / 天道灵脉游龙录(动画)。
 // 全部为纯静态 SVG + SMIL/CSS 动画，可被 GitHub 直接渲染，零第三方服务。
 import { svgWrap, text, esc, star } from '../api/_lib/svg.js';
-import { dateStrOffset, todayStr } from '../api/_lib/tz.js';
+import { todayStr } from '../api/_lib/tz.js';
 
 export const LANG_COLORS = {
   Python: '#3572A5', JavaScript: '#F1E05A', TypeScript: '#3178C6', Vue: '#41B883',
@@ -13,14 +13,23 @@ export const LANG_COLORS = {
 
 export const langColor = (l) => LANG_COLORS[l] || '#8B949E';
 
-/** 贡献热力分级（接近 GitHub 视觉） */
-export function levelOf(count, max) {
+/**
+ * 贡献热力分级（接近 GitHub 视觉）。
+ * max >= 10 时用固定阈值（色阶稳定，不会因每次更新的最大值变化而整体跳色）；
+ * max 很小时退化为相对分级，避免整张图只有一种颜色。
+ */
+export function levelOf(count, max = 0) {
   if (count <= 0) return 0;
-  if (max <= 0) return 1;
-  const t = count / max;
-  if (t > 0.7) return 4;
-  if (t > 0.4) return 3;
-  if (t > 0.15) return 2;
+  if (max > 0 && max < 10) {
+    const t = count / max;
+    if (t > 0.7) return 4;
+    if (t > 0.4) return 3;
+    if (t > 0.15) return 2;
+    return 1;
+  }
+  if (count >= 10) return 4;
+  if (count >= 5) return 3;
+  if (count >= 2) return 2;
   return 1;
 }
 const HEAT = ['rgba(142,140,216,0.10)', 'rgba(142,140,216,0.32)', 'rgba(142,140,216,0.55)', 'rgba(142,140,216,0.80)', '#C8A2F0'];
@@ -89,7 +98,7 @@ viewBox="0 0 480 56">
 /** 修行记录统计卡：6 项指标 2 行 */
 export function renderStats(stats) {
   const items = [
-    { v: stats.yearTotal ?? '-', k: '今年提交' },
+    { v: stats.yearTotal ?? '-', k: '年度贡献' },
     { v: stats.repos ?? '-', k: '洞府（仓库）' },
     { v: stats.stars ?? '-', k: '法宝（Star）' },
     { v: stats.followers ?? '-', k: '道众（粉丝）' },
@@ -230,10 +239,10 @@ export function renderTrophy(data) {
 }
 
 /** 天道灵脉 · 游龙录 —— 数据计算（近30日/昨日/连续/上月/品质/进度/状态/涨幅） */
-export function computeSpiritStats(days) {
+export function computeSpiritStats(days, { now = new Date() } = {}) {
   const map = new Map((days || []).map((d) => [d.date, d.count]));
-  // 使用北京时间统一的日期工具（已在顶部 import）
-  const get = (offset) => map.get(dateStrOffset(offset)) || 0;
+  // 本卡沿用 GitHub 日历（UTC 分日）口径；如需"北京自然日"请改传精确提交数据
+  const get = (offset) => map.get(new Date(now.getTime() - offset * 86400e3).toISOString().slice(0, 10)) || 0;
 
   // 近 30 天逐日提交（索引 0 = 29 天前 … 索引 28 = 昨日，索引 29 = 今日）
   const daily_commits = [];

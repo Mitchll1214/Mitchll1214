@@ -39,6 +39,9 @@ jobs:
       - name: 生成全部 SVG 卡片（GitHub 官方 API，零第三方依赖）
         run: node local/generate.js Mitchll1214
         env:
+          # 可选但推荐：fine-grained PAT（Contents: Read），用于统计私有库与按北京自然日精确统计提交。
+          # 未配置时自动回退到 GITHUB_TOKEN：只能看到公开仓库 + 当前仓库，私有库数据缺失。
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: 提交更新

@@ -1,43 +1,54 @@
 // 灵宠系统：活跃度驱动的 Q 版仙狐「小九」。
 // 成长阶段 ← 近一年贡献总数；心情/灵力 ← 今日与近 30 日活跃；亲密度 ← 最长连续贡献。
+//
+// 口径：
+//   - 传入 preciseDays（按北京自然日精确统计的 commit 数）时，今日/连续/近30日/闲置天数
+//     全部以它为准，避免 GitHub 贡献日历"按 UTC 分日"造成的凌晨错位；
+//   - yearTotal 始终取贡献日历的整年求和（展示口径，跨年边界更稳）。
 import { todayStr, dateStrOffset } from './tz.js';
 
-const DAY = 86400e3;
+/** 贡献数组 → 今日、近30日、连续天数、近一年总数、最近活跃距今天数 */
+export function analyzeContributions(list, { now = new Date(), preciseDays = null } = {}) {
+  if ((!list || !list.length) && !preciseDays) return null;
 
-/** 贡献数组 → 今日、近30日、连续天数、近一年总数、最近活跃距今天数（北京时间） */
-export function analyzeContributions(list) {
-  if (!list || !list.length) return null;
-  const map = new Map(list.map((c) => [c.date, c.count]));
-  // 使用北京时间统一的"今天"定义
-  const todayKey = todayStr();
+  const calendar = new Map((list || []).map((c) => [c.date, c.count]));
+  // 精确数据优先：按北京自然日归组的 commit 数
+  const get = preciseDays
+    ? (offset) => preciseDays.get(dateStrOffset(offset, now)) || 0
+    : (offset) => calendar.get(dateStrOffset(offset, now)) || 0;
 
   let last30 = 0;
-  for (let i = 0; i < 30; i++) {
-    last30 += map.get(dateStrOffset(i)) || 0;
-  }
+  for (let i = 0; i < 30; i++) last30 += get(i);
 
+  // 年度总数直接对日历求和：GitHub 返回的就是近一年，避免与北京日期错位
   let yearTotal = 0;
-  for (let i = 0; i < 365; i++) {
-    yearTotal += map.get(dateStrOffset(i)) || 0;
-  }
+  for (const c of list || []) yearTotal += c.count || 0;
 
-  const todayCount = map.get(todayKey) || 0;
+  const todayCount = get(0);
 
   // 连续贡献天数（从今天起；今天没贡献则从昨天起算）
   let streak = 0;
-  let startOffset = todayCount > 0 ? 0 : 1;
+  const startOffset = todayCount > 0 ? 0 : 1;
   for (let i = startOffset; i < 366; i++) {
-    if ((map.get(dateStrOffset(i)) || 0) > 0) streak++;
+    if (get(i) > 0) streak++;
     else break;
   }
 
-  // 最近一次贡献距今几天
-  let daysIdle = 0;
+  // 最近一次贡献距今几天（找不到时给一个足够大的值，避免被误判为"今天活跃"）
+  let daysIdle = 999;
   for (let i = 0; i < 366; i++) {
-    if (map.get(dateStrOffset(i))) { daysIdle = i; break; }
+    if (get(i) > 0) { daysIdle = i; break; }
   }
 
-  return { todayCount, last30, streak, yearTotal, daysIdle };
+  return {
+    todayCount,
+    last30,
+    streak,
+    yearTotal,
+    daysIdle,
+    todayKey: todayStr(now),
+    precise: Boolean(preciseDays),
+  };
 }
 
 /** 阶段（成长度） */
@@ -58,8 +69,8 @@ export function moodOf(a) {
   return { key: 'sleep', label: '陷入沉眠 · 快回来投喂灵力', color: '#9AA3C0' };
 }
 
-export function computePet(list) {
-  const a = analyzeContributions(list);
+export function computePet(list, opts = {}) {
+  const a = analyzeContributions(list, opts);
   const stage = stageOf(a ? a.yearTotal : 0);
   const mood = moodOf(a);
   const spirit = a ? Math.min(100, Math.round((a.last30 / 15) * 100)) : 0;

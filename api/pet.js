@@ -7,9 +7,9 @@ import { computePet } from './_lib/pet.js';
 // 龙的成长阶段（沿用活跃度驱动逻辑，仅换龙系命名）
 const DRAGON_STAGES = ['龙蛋', '幼龙', '青龙', '应龙', '神龙'];
 
-export async function renderPet(username, { days } = {}) {
+export async function renderPet(username, { days, preciseDays = null, now } = {}) {
   const list = days || (await getContributions(username).catch(() => null));
-  const p = computePet(list);
+  const p = computePet(list, { preciseDays, now });
 
   const today = p.a?.todayCount ?? 0;
   const streak = p.a?.streak ?? 0;
